@@ -13,15 +13,23 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
   final MainMenuStore _mainMenuStore = MainMenuStore();
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: GestureDetector(
-        child: Container(
-          color: Colors.blue,
-          child: const Text(":)"),
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Main Menu"),
+      ),
+      body: Center(
+        child: GestureDetector(
+          child: Container(
+            width: 100,
+            height: 70,
+            color: Colors.blue,
+            alignment: Alignment.center,
+            child: const Text(":)"),
+          ),
+          onTap: () {
+            Navigator.pop(context);
+          },
         ),
-        onTap: () {
-          Navigator.pop(context);
-        },
       ),
     );
   }

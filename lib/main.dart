@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:geeruh/geeruh_navigator.dart';
+import 'package:geeruh/global_constants.dart';
 
 void main() {
   runApp(const MyApp());
@@ -16,6 +18,8 @@ class MyApp extends StatelessWidget {
   }
 }
 
+//TODO Remove this class and its state once we have more than one screen, and replace
+//"home" parameter in MyApp with some othe screen
 class HomePage extends StatefulWidget {
   const HomePage({super.key, required this.title});
 
@@ -30,16 +34,14 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('First Route'),
+        title: const Text("Home"),
       ),
       body: Center(
         child: ElevatedButton(
-          child: const Text('Open route'),
+          child: const Text("Go to Main Menu"),
           onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const SecondRoute()),
-            );
+            Navigator.push(context,
+                geeruhPageRoute(context, ConstantScreens.MainMenuScreen));
           },
         ),
       ),
@@ -47,23 +49,23 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-class SecondRoute extends StatelessWidget {
-  const SecondRoute({super.key});
+// class SecondRoute extends StatelessWidget {
+//   const SecondRoute({super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Second Route'),
-      ),
-      body: Center(
-        child: ElevatedButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          child: const Text('Go back!'),
-        ),
-      ),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: const Text('Second Route'),
+//       ),
+//       body: Center(
+//         child: ElevatedButton(
+//           onPressed: () {
+//             Navigator.pop(context);
+//           },
+//           child: const Text('Go back!'),
+//         ),
+//       ),
+//     );
+//   }
+// }
