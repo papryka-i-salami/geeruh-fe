@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:geeruh/geeruh_navigator.dart';
+import 'package:geeruh/global_constants.dart';
 
 void main() {
   runApp(const MyApp());
@@ -16,6 +18,8 @@ class MyApp extends StatelessWidget {
   }
 }
 
+//TODO Remove this class and its state once we have more than one screen, and replace
+//"home" parameter in MyApp with some othe screen
 class HomePage extends StatefulWidget {
   const HomePage({super.key, required this.title});
 
@@ -26,39 +30,42 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        title: const Text("Home"),
       ),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
-          ],
+        child: ElevatedButton(
+          child: const Text("Go to Main Menu"),
+          onPressed: () {
+            Navigator.push(context,
+                geeruhPageRoute(context, ConstantScreens.MainMenuScreen));
+          },
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
       ),
     );
   }
 }
+
+// class SecondRoute extends StatelessWidget {
+//   const SecondRoute({super.key});
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: const Text('Second Route'),
+//       ),
+//       body: Center(
+//         child: ElevatedButton(
+//           onPressed: () {
+//             Navigator.pop(context);
+//           },
+//           child: const Text('Go back!'),
+//         ),
+//       ),
+//     );
+//   }
+// }
