@@ -45,3 +45,5 @@ app.*.map.json
 
 # Other
 pubspec.lock
+*.g.dart
+*.chopper.dart

@@ -1,6 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:geeruh/api/api_build.dart';
+import 'package:geeruh/api/api_requests.dart';
+import 'package:geeruh/geeruh_navigator.dart';
+import 'package:geeruh/global_constants.dart';
+import 'package:provider/provider.dart' as provider;
 
 void main() {
+  var chopper = initChopperClient();
+  _addProvider(chopper);
+  _addProvider(ApiRequests.create(chopper));
   runApp(const MyApp());
 }
 
@@ -9,61 +17,44 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      title: 'Geeruh',
-      home: HomePage(title: 'Home'),
+    return _wrapWithProviders(
+      MaterialApp(
+          title: 'Geeruh',
+          initialRoute: ConstantScreens.StartScreen,
+          onGenerateRoute: (RouteSettings settings) =>
+              geeruhPageRoute(context, settings.name!)),
     );
   }
 }
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key, required this.title});
+List<provider.Provider<dynamic>> _providers = [];
 
-  final String title;
-
-  @override
-  State<HomePage> createState() => _HomePageState();
+_addProvider<T>(T service) {
+  _providers += [provider.Provider<T>(create: (_) => service)];
 }
 
-class _HomePageState extends State<HomePage> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('First Route'),
-      ),
-      body: Center(
-        child: ElevatedButton(
-          child: const Text('Open route'),
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const SecondRoute()),
-            );
-          },
-        ),
-      ),
+Widget _wrapWithProviders(MaterialApp matieralApp) => provider.MultiProvider(
+      providers: _providers,
+      child: matieralApp,
     );
-  }
-}
 
-class SecondRoute extends StatelessWidget {
-  const SecondRoute({super.key});
+// class SecondRoute extends StatelessWidget {
+//   const SecondRoute({super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Second Route'),
-      ),
-      body: Center(
-        child: ElevatedButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          child: const Text('Go back!'),
-        ),
-      ),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: const Text('Second Route'),
+//       ),
+//       body: Center(
+//         child: ElevatedButton(
+//           onPressed: () {
+//             Navigator.pop(context);
+//           },
+//           child: const Text('Go back!'),
+//         ),
+//       ),
+//     );
+//   }
+// }
