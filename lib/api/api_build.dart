@@ -55,6 +55,7 @@ Future<Response<T?>> apiRequest<T>(
     }
   } catch (e) {
     debugPrint('$e');
+    error = "Wystapil blad";
   }
   if (error.isNotEmpty) {
     _showSnackBar(context, error);
