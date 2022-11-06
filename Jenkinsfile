@@ -14,10 +14,8 @@ pipeline {
         }
 
         stage('Tests') {
-            stage('Test') {
-                steps {
-                    sh 'flutter test test/widget_test.dart'
-                }
+            steps {
+                sh 'flutter test test/widget_test.dart'
             }
         }
     }
