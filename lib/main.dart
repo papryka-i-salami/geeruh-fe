@@ -38,23 +38,10 @@ Widget _wrapWithProviders(MaterialApp matieralApp) => provider.MultiProvider(
       child: matieralApp,
     );
 
-// class SecondRoute extends StatelessWidget {
-//   const SecondRoute({super.key});
+class Counter {
+  int value = 0;
 
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: const Text('Second Route'),
-//       ),
-//       body: Center(
-//         child: ElevatedButton(
-//           onPressed: () {
-//             Navigator.pop(context);
-//           },
-//           child: const Text('Go back!'),
-//         ),
-//       ),
-//     );
-//   }
-// }
+  void increment() => value++;
+
+  void decrement() => value--;
+}
