@@ -1,4 +1,5 @@
 class ConstantScreens {
-  static const MainMenuScreen = "MainMenuScreen";
-  static const StartScreen = "StartScreen";
+  static const mainMenuScreen = "MainMenuScreen";
+  static const startScreen = "StartScreen";
+  static const boardScreen = "BoardScreen";
 }

@@ -17,13 +17,27 @@ class _StartScreenState extends State<StartScreen> {
       appBar: AppBar(
         title: const Text("Home"),
       ),
-      body: Center(
-        child: ElevatedButton(
-          child: const Text("Go to Main Menu"),
-          onPressed: () {
-            Navigator.pushNamed(context, ConstantScreens.MainMenuScreen);
-          },
-        ),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Center(
+            child: ElevatedButton(
+              child: const Text("Go to Main Menu"),
+              onPressed: () {
+                Navigator.pushNamed(context, ConstantScreens.mainMenuScreen);
+              },
+            ),
+          ),
+          const SizedBox(height: 30),
+          Center(
+            child: ElevatedButton(
+              child: const Text("Go to Board Screen"),
+              onPressed: () {
+                Navigator.pushNamed(context, ConstantScreens.boardScreen);
+              },
+            ),
+          ),
+        ],
       ),
     );
   }

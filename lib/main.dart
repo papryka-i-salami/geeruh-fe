@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
     return _wrapWithProviders(
       MaterialApp(
           title: 'Geeruh',
-          initialRoute: ConstantScreens.StartScreen,
+          initialRoute: ConstantScreens.startScreen,
           onGenerateRoute: (RouteSettings settings) =>
               geeruhPageRoute(context, settings.name!)),
     );
