@@ -37,3 +37,11 @@ Widget _wrapWithProviders(MaterialApp matieralApp) => provider.MultiProvider(
       providers: _providers,
       child: matieralApp,
     );
+
+class Counter {
+  int value = 0;
+
+  void increment() => value++;
+
+  void decrement() => value--;
+}
