@@ -82,17 +82,61 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
-  # fonts:
-  #   - family: Schyler
-  #     fonts:
-  #       - asset: fonts/Schyler-Regular.ttf
-  #       - asset: fonts/Schyler-Italic.ttf
-  #         style: italic
-  #   - family: Trajan Pro
-  #     fonts:
-  #       - asset: fonts/TrajanPro.ttf
-  #       - asset: fonts/TrajanPro_Bold.ttf
-  #         weight: 700
+  fonts:
+    - family: PublicSans-Black 
+      fonts:
+        - asset: fonts/PublicSans-Black.ttf
+    - family: PublicSans-BlackItalic
+      fonts:
+        - asset: fonts/PublicSans-BlackItalic.ttf
+    - family: PublicSans-Bold
+      fonts:
+        - asset: fonts/PublicSans-Bold.ttf
+    - family: PublicSans-BoldItalic
+      fonts:
+        - asset: fonts/PublicSans-BoldItalic.ttf
+    - family: PublicSans-ExtraBold
+      fonts:
+        - asset: fonts/PublicSans-ExtraBold.ttf
+    - family: PublicSans-ExtraBoldItalic
+      fonts:
+        - asset: fonts/PublicSans-ExtraBoldItalic.ttf
+    - family: PublicSans-ExtraLight
+      fonts:
+        - asset: fonts/PublicSans-ExtraLight.ttf
+    - family: PublicSans-ExtraLightItalic
+      fonts:
+        - asset: fonts/PublicSans-ExtraLightItalic.ttf
+    - family: PublicSans-Italic
+      fonts:
+        - asset: fonts/PublicSans-Italic.ttf
+    - family: PublicSans-Light
+      fonts:
+        - asset: fonts/PublicSans-Light.ttf
+    - family: PublicSans-LightItalic
+      fonts:
+        - asset: fonts/PublicSans-LightItalic.ttf
+    - family: PublicSans-Medium
+      fonts:
+        - asset: fonts/PublicSans-Medium.ttf
+    - family: PublicSans-MediumItalic
+      fonts:
+        - asset: fonts/PublicSans-MediumItalic.ttf
+    - family: PublicSans-Regular
+      fonts:
+        - asset: fonts/PublicSans-Regular.ttf
+    - family: PublicSans-SemiBold
+      fonts:
+        - asset: fonts/PublicSans-SemiBold.ttf
+    - family: PublicSans-SemiBoldItalic
+      fonts:
+        - asset: fonts/PublicSans-SemiBoldItalic.ttf
+    - family: PublicSans-Thin
+      fonts:
+        - asset: fonts/PublicSans-Thin.ttf
+    - family: PublicSans-ThinItalic
+      fonts:
+        - asset: fonts/PublicSans-ThinItalic.ttf
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
