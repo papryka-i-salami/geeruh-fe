@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:chopper/chopper.dart';
 import 'package:flutter/material.dart';
 import 'package:geeruh/api/api_classes.dart';
+import 'package:geeruh/global_constants.dart';
 
 JsonToTypeConverter _converter = JsonToTypeConverter(
   typeToMap: {HelloWorldRes: (json) => HelloWorldRes.fromJson(json)},
@@ -39,7 +40,7 @@ class JsonToTypeConverter extends JsonConverter {
 }
 
 ChopperClient initChopperClient() =>
-    ChopperClient(baseUrl: "http://localhost:8080");
+    ChopperClient(baseUrl: ConstantDev.hostAddress);
 
 Future<Response<T?>> apiRequest<T>(
     Future<Response<T?>> future, BuildContext context) async {

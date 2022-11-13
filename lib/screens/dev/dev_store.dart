@@ -30,7 +30,6 @@ abstract class _DevStore with Store {
   Future _getHelloWorld(BuildContext context) async {
     final response = await apiRequest(_api.getHelloWorld(), context);
     if (response.isSuccessful) {
-      // var xd = response.body["hello"];
       greeting = response.body!;
     }
   }
