@@ -22,7 +22,7 @@ class _StartScreenState extends State<StartScreen> {
         children: [
           Center(
             child: ElevatedButton(
-              child: const Text("Go to Main Menu"),
+              child: const Text("Go to Dev Screen"),
               onPressed: () {
                 Navigator.pushNamed(context, ConstantScreens.mainMenuScreen);
               },
