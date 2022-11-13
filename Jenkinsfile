@@ -21,8 +21,6 @@ pipeline {
 
         stage('Automatic tests') {
             steps {
-                sh 'apt-get update'
-                sh 'apt-get install cmake -y'
                 sh 'flutter config --enable-linux-desktop'
                 sh 'flutter test integration_test/automatic_test.dart -d Linux'
             }
