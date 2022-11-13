@@ -1,7 +1,7 @@
 pipeline {
     agent {
         docker {
-            image 'cirrusci/flutter:latest'
+            image 'flutter-pis'
         }
     }
 
