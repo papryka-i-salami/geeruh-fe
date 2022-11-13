@@ -22,6 +22,7 @@ class _StartScreenState extends State<StartScreen> {
         children: [
           Center(
             child: ElevatedButton(
+              key: const Key(ConstantScreens.mainMenuScreen),
               child: const Text("Go to Main Menu"),
               onPressed: () {
                 Navigator.pushNamed(context, ConstantScreens.mainMenuScreen);
@@ -31,6 +32,7 @@ class _StartScreenState extends State<StartScreen> {
           const SizedBox(height: 30),
           Center(
             child: ElevatedButton(
+              key: const Key(ConstantScreens.boardScreen),
               child: const Text("Go to Board Screen"),
               onPressed: () {
                 Navigator.pushNamed(context, ConstantScreens.boardScreen);

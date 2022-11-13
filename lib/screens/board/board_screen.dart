@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:geeruh/screens/test_screen/main_menu_store.dart';
+import 'package:geeruh/screens/board/board_store.dart';
 import 'package:geeruh/utils/state_with_lifecycle.dart';
 
 class BoardScreen extends StatefulWidget {
@@ -11,11 +11,11 @@ class BoardScreen extends StatefulWidget {
 }
 
 class _BoardScreenState extends StateWithLifecycle<BoardScreen> {
-  final MainMenuStore _mainMenuStore = MainMenuStore();
+  final BoardStore _boardStore = BoardStore();
 
   @override
   void preFirstBuildInit() {
-    _mainMenuStore.init(context);
+    _boardStore.init(context);
   }
 
   @override

@@ -58,6 +58,7 @@ Future<Response<T?>> apiRequest<T>(
     error = "Wystapil blad";
   }
   if (error.isNotEmpty) {
+    // ignore: use_build_context_synchronously
     _showSnackBar(context, error);
     return Future.error(error);
   }

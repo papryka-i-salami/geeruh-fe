@@ -1,12 +1,15 @@
 import 'package:geeruh/main.dart';
-import 'package:test/test.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  test('Counter value should be incremented', () {
-    final counter = Counter();
+  test(
+    'Counter value should be incremented',
+    () {
+      final counter = Counter();
 
-    counter.increment();
+      counter.increment();
 
-    expect(counter.value, 1);
-  });
+      expect(counter.value, 1);
+    },
+  );
 }

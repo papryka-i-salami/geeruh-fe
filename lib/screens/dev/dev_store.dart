@@ -4,12 +4,12 @@ import 'package:geeruh/api/api_requests.dart';
 import 'package:mobx/mobx.dart';
 import 'package:provider/provider.dart';
 
-part 'main_menu_store.g.dart';
+part 'dev_store.g.dart';
 
 // ignore: library_private_types_in_public_api
-class MainMenuStore = _MainMenuStore with _$MainMenuStore;
+class DevStore = _DevStore with _$DevStore;
 
-abstract class _MainMenuStore with Store {
+abstract class _DevStore with Store {
   late ApiRequests _api;
 
   @observable
