@@ -16,7 +16,7 @@ void main() {
         app.main();
         await tester.pumpAndSettle();
         await oneCallKey(
-            ConstantScreens.mainMenuScreen, 1, false, tester, binding, "Linux");
+            ConstantScreens.devScreen, 1, false, tester, binding, "Linux");
         await tester.pumpAndSettle();
         await oneCallKey("HelloWorld", 1, false, tester, binding, "Linux");
       });

@@ -6,7 +6,7 @@ import 'package:geeruh/screens/start/start_screen.dart';
 
 Route geeruhPageRoute(BuildContext context, String screen) {
   switch (screen) {
-    case ConstantScreens.mainMenuScreen:
+    case ConstantScreens.devScreen:
       return MaterialPageRoute(builder: (_) => const DevScreen());
 
     case ConstantScreens.startScreen:
