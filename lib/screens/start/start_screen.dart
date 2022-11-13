@@ -22,15 +22,17 @@ class _StartScreenState extends State<StartScreen> {
         children: [
           Center(
             child: ElevatedButton(
+              key: const Key(ConstantScreens.devScreen),
               child: const Text("Go to Dev Screen"),
               onPressed: () {
-                Navigator.pushNamed(context, ConstantScreens.mainMenuScreen);
+                Navigator.pushNamed(context, ConstantScreens.devScreen);
               },
             ),
           ),
           const SizedBox(height: 30),
           Center(
             child: ElevatedButton(
+              key: const Key(ConstantScreens.boardScreen),
               child: const Text("Go to Board Screen"),
               onPressed: () {
                 Navigator.pushNamed(context, ConstantScreens.boardScreen);

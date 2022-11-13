@@ -1,23 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:geeruh/screens/test_screen/main_menu_store.dart';
+import 'package:geeruh/screens/dev/dev_store.dart';
 import 'package:geeruh/theme.dart';
 import 'package:geeruh/utils/state_with_lifecycle.dart';
 
-class MainMenuScreen extends StatefulWidget {
-  const MainMenuScreen({super.key});
+class DevScreen extends StatefulWidget {
+  const DevScreen({super.key});
 
   @override
   // ignore: library_private_types_in_public_api
-  _MainMenuScreenState createState() => _MainMenuScreenState();
+  _DevScreenState createState() => _DevScreenState();
 }
 
-class _MainMenuScreenState extends StateWithLifecycle<MainMenuScreen> {
-  final MainMenuStore _mainMenuStore = MainMenuStore();
+class _DevScreenState extends StateWithLifecycle<DevScreen> {
+  final DevStore _devStore = DevStore();
 
   @override
   void preFirstBuildInit() {
-    _mainMenuStore.init(context);
+    _devStore.init(context);
   }
 
   @override
@@ -31,6 +31,7 @@ class _MainMenuScreenState extends StateWithLifecycle<MainMenuScreen> {
         children: [
           Center(
             child: GestureDetector(
+              key: const Key("HelloWorld"),
               child: Container(
                 width: 100,
                 height: 70,
@@ -39,13 +40,13 @@ class _MainMenuScreenState extends StateWithLifecycle<MainMenuScreen> {
                 child: const Text(":)"),
               ),
               onTap: () {
-                _mainMenuStore.getHelloWorld(context);
+                _devStore.getHelloWorld(context);
               },
             ),
           ),
           Observer(
             builder: (_) => Center(
-              child: Text(_mainMenuStore.greeting),
+              child: Text(_devStore.greeting),
             ),
           ),
           Row(

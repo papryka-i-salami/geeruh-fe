@@ -13,9 +13,15 @@ pipeline {
             }
         }
 
-        stage('Tests') {
+        stage('Unit tests') {
             steps {
                 sh 'flutter test test/widget_test.dart'
+            }
+        }
+
+        stage('Automatic tests') {
+            steps {
+                sh 'flutter test integration_test/automatic_test.dart -d Linux'
             }
         }
     }
