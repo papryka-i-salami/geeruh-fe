@@ -1,5 +1,4 @@
 import 'package:chopper/chopper.dart';
-import 'package:geeruh/api/api_classes.dart';
 
 part 'api_requests.chopper.dart';
 
