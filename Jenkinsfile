@@ -4,8 +4,6 @@ pipeline {
         NEXUS = credentials('nexus-user-credentials')
         
         TWINE_REPOSITORY_URL="http://20.4.227.77:8081/repository/geeruh-fe/"
-        TWINE_USERNAME=env.NEXUS_USR
-        TWINE_PASSWORD=env.NEXUS_PSW
     }
 
     agent {
@@ -37,7 +35,7 @@ pipeline {
         }
         stage('Publish') {
              steps {
-                sh 'twine upload --repository-url ${env.TWINE_REPOSITORY_URL} --username ${env.TWINE_USERNAME} --password ${env.TWINE_PASSWORD} build/web/*'
+                sh 'twine upload --repository-url ${env.TWINE_REPOSITORY_URL} --username ${env.NEXUS_USR} --password ${env.NEXUS_PSW} build/web/*'
             }
         }
     }
