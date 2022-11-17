@@ -9,6 +9,7 @@ pipeline {
     agent {
         docker {
             image 'flutter-pis'
+            args  '--cpus=".5" -m 1500M'
         }
     }
 
@@ -35,8 +36,9 @@ pipeline {
         // }
         stage('Publish') {
              steps {
-
-                sh "twine upload --repository-url ${env.TWINE_REPOSITORY_URL} --username ${env.NEXUS_USR} --password ${env.NEXUS_PSW} build/web/*"
+                //gzip
+                sh 'tar czf web.tar.gz build/web'
+                sh "twine upload --repository-url ${env.TWINE_REPOSITORY_URL} --username ${env.NEXUS_USR} --password ${env.NEXUS_PSW} build/web.zip"
             }
         }
     }
