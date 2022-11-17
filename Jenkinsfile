@@ -36,7 +36,7 @@ pipeline {
         stage('Publish') {
              steps {
                 sh 'zip -r build.zip build/web'
-                sh "curl -v -u ${env.NEXUS_USR}:${env.NEXUS_PSW} --upload-file ./build.zip http://20.4.227.77:8081/repository/PIS-geeruh/"
+                sh "curl -v -u ${env.NEXUS_USR}:${env.NEXUS_PSW} --upload-file ./build.zip http://20.4.227.77:8081/repository/geeruh-fe/"
             }
         }
         
