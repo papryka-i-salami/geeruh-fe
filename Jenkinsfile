@@ -38,7 +38,7 @@ pipeline {
              steps {
                 //gzip
                 sh 'tar czf web.tar.gz build/web'
-                sh "twine upload --repository-url ${env.TWINE_REPOSITORY_URL} --username ${env.NEXUS_USR} --password ${env.NEXUS_PSW} build/web.zip"
+                sh "twine upload --repository-url ${env.TWINE_REPOSITORY_URL} --username ${env.NEXUS_USR} --password ${env.NEXUS_PSW} build/web.tar.gz"
             }
         }
     }
