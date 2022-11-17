@@ -21,18 +21,18 @@ pipeline {
             }
         }
 
-        stage('Unit tests') {
-            steps {
-                sh 'flutter test test/widget_test.dart'
-            }
-        }
+        // stage('Unit tests') {
+        //     steps {
+        //         sh 'flutter test test/widget_test.dart'
+        //     }
+        // }
 
-        stage('Automatic tests') {
-            steps {
-                sh 'flutter config --enable-linux-desktop'
-                sh 'xvfb-run flutter test integration_test/automatic_test.dart -d Linux'
-            }
-        }
+        // stage('Automatic tests') {
+        //     steps {
+        //         sh 'flutter config --enable-linux-desktop'
+        //         sh 'xvfb-run flutter test integration_test/automatic_test.dart -d Linux'
+        //     }
+        // }
         stage('Publish') {
              steps {
                 sh 'twine upload --repository-url ${env.TWINE_REPOSITORY_URL} --username ${env.NEXUS_USR} --password ${env.NEXUS_PSW} build/web/*'
