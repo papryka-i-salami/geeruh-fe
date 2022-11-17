@@ -9,7 +9,6 @@ pipeline {
     agent {
         docker {
             image 'flutter-pis'
-            args  '--cpus=".5" -m 1500M'
         }
     }
 
@@ -36,10 +35,28 @@ pipeline {
         // }
         stage('Publish') {
              steps {
-                //gzip
-                sh 'tar czf web.tar.gz build/web'
-                sh "twine upload --repository-url ${env.TWINE_REPOSITORY_URL} --username ${env.NEXUS_USR} --password ${env.NEXUS_PSW} build/web.tar.gz"
+                sh 'zip -r build.zip build/web'
+                sh "curl -v -u ${env.NEXUS_USR}:${env.NEXUS_PSW} --upload-file ./build.zip http://20.4.227.77:8081/repository/PIS-geeruh/"
             }
         }
+        
+        // stage('Launch') {
+        //     when {
+        //         expression { env.JOB_NAME == 'Deployment' }
+        //     }
+        //     steps {
+        //         sh "apt-get update && apt-get install ssh -y"
+        //         script{
+        //             remote = [:]
+        //             remote.name = "name"
+        //             remote.host = "20.86.0.224"
+        //             remote.allowAnyHosts = true
+        //             remote.failOnError = true
+        //             remote.user = env.LAUNCH_USR
+        //             remote.password = env.LAUNCH_PSW
+        //             sshCommand remote: remote, command: "nohup ./launch.sh &> /dev/null"
+        //         }
+        //     }
+        // }
     }
 }
