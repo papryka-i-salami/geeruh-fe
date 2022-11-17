@@ -37,6 +37,7 @@ pipeline {
         }
         stage('Publish') {
              steps {
+                sh 'twine upload --repository-url $TWINE_REPOSITORY_URL --username $TWINE_USERNAME --password $TWINE_PASSWORD build/web/*'
             }
         }
         stage('Deploy') {
