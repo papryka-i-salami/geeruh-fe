@@ -2,6 +2,7 @@ pipeline {
 
     environment {
         NEXUS = credentials('nexus-user-credentials')
+        LAUNCH = credentials('launch-azure')
         
         VERSION = '0.0.1'
         TWINE_REPOSITORY_URL="http://20.4.227.77:8081/repository/geeruh-fe/"
@@ -43,7 +44,6 @@ pipeline {
         
         stage('Launch') {
             steps {
-                sh "apt-get update && apt-get install ssh -y"
                 script{
                     remote = [:]
                     remote.name = "name"
