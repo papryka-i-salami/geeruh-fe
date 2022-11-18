@@ -36,7 +36,7 @@ pipeline {
         // }
         stage('Publish') {
              steps {
-                sh "zip -r build ${env.VERSION}.zip build/web"
+                sh "zip -r build${env.VERSION}.zip build/web"
                 sh "curl -v -u ${env.NEXUS_USR}:${env.NEXUS_PSW} --upload-file ./build${env.VERSION}.zip http://20.4.227.77:8081/repository/geeruh-fe/"
             }
         }
@@ -55,7 +55,7 @@ pipeline {
                     remote.failOnError = true
                     remote.user = env.LAUNCH_USR
                     remote.password = env.LAUNCH_PSW
-                    sshCommand remote: remote, command: "nohup ./launch.sh  ./test${env.VERSION}.zip &> /dev/null"
+                    sshCommand remote: remote, command: "nohup ./launch.sh build${env.VERSION}.zip &> /dev/null"
                 }
             }
         }
