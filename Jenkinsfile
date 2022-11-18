@@ -52,7 +52,7 @@ pipeline {
                     remote.failOnError = true
                     remote.user = env.LAUNCH_USR
                     remote.password = env.LAUNCH_PSW
-                    sshCommand remote: remote, command: "nohup ./launch.sh build${env.VERSION}.zip &> /dev/null"
+                    sshCommand remote: remote, command: "sudo nohup ./launch.sh build${env.VERSION}.zip &> /dev/null"
                 }
             }
         }
