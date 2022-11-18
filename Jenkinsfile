@@ -3,6 +3,7 @@ pipeline {
     environment {
         NEXUS = credentials('nexus-user-credentials')
         
+        VERSION = '0.0.1'
         TWINE_REPOSITORY_URL="http://20.4.227.77:8081/repository/geeruh-fe/"
     }
 
@@ -35,28 +36,28 @@ pipeline {
         // }
         stage('Publish') {
              steps {
-                sh 'zip -r build.zip build/web'
-                sh "curl -v -u ${env.NEXUS_USR}:${env.NEXUS_PSW} --upload-file ./build.zip http://20.4.227.77:8081/repository/geeruh-fe/"
+                sh "zip -r build ${env.VERSION}.zip build/web"
+                sh "curl -v -u ${env.NEXUS_USR}:${env.NEXUS_PSW} --upload-file ./build${env.VERSION}.zip http://20.4.227.77:8081/repository/geeruh-fe/"
             }
         }
         
-        // stage('Launch') {
-        //     when {
-        //         expression { env.JOB_NAME == 'Deployment' }
-        //     }
-        //     steps {
-        //         sh "apt-get update && apt-get install ssh -y"
-        //         script{
-        //             remote = [:]
-        //             remote.name = "name"
-        //             remote.host = "20.86.0.224"
-        //             remote.allowAnyHosts = true
-        //             remote.failOnError = true
-        //             remote.user = env.LAUNCH_USR
-        //             remote.password = env.LAUNCH_PSW
-        //             sshCommand remote: remote, command: "nohup ./launch.sh &> /dev/null"
-        //         }
-        //     }
-        // }
+        stage('Launch') {
+            when {
+                expression { env.JOB_NAME == 'Deployment' }
+            }
+            steps {
+                sh "apt-get update && apt-get install ssh -y"
+                script{
+                    remote = [:]
+                    remote.name = "name"
+                    remote.host = "20.86.0.224"
+                    remote.allowAnyHosts = true
+                    remote.failOnError = true
+                    remote.user = env.LAUNCH_USR
+                    remote.password = env.LAUNCH_PSW
+                    sshCommand remote: remote, command: "nohup ./launch.sh  ./test${env.VERSION}.zip &> /dev/null"
+                }
+            }
+        }
     }
 }
