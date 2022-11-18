@@ -42,9 +42,6 @@ pipeline {
         }
         
         stage('Launch') {
-            when {
-                expression { env.JOB_NAME == 'Deployment' }
-            }
             steps {
                 sh "apt-get update && apt-get install ssh -y"
                 script{
