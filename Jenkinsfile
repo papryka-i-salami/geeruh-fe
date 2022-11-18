@@ -47,7 +47,7 @@ pipeline {
                 script{
                     remote = [:]
                     remote.name = "name"
-                    remote.host = "20.86.0.224"
+                    remote.host = "34.116.138.46"
                     remote.allowAnyHosts = true
                     remote.failOnError = true
                     remote.user = env.LAUNCH_USR
