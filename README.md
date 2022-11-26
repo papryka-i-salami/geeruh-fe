@@ -15,7 +15,7 @@ Geeruh wspiera obecnie 3 platformy: Linux, Windows oraz Web. W przypadku Windows
 ### Budowanie projektu
 
 ```sh
-flutter run build_runner build --delete-conflicting-outputs
+flutter pub run build_runner build --delete-conflicting-outputs
 ```
 
 ### Uruchamianie projektu
