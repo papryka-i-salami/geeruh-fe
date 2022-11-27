@@ -6,7 +6,10 @@ import 'package:geeruh/api/api_classes.dart';
 import 'package:geeruh/global_constants.dart';
 
 JsonToTypeConverter _converter = JsonToTypeConverter(
-  typeToMap: {HelloWorldRes: (json) => HelloWorldRes.fromJson(json)},
+  typeToMap: {
+    HelloWorldRes: (json) => HelloWorldRes.fromJson(json),
+    IssueRes: (json) => IssueRes.fromJson(json)
+  },
 );
 
 class JsonToTypeConverter extends JsonConverter {
@@ -40,7 +43,7 @@ class JsonToTypeConverter extends JsonConverter {
 }
 
 ChopperClient initChopperClient() =>
-    ChopperClient(baseUrl: ConstantDev.hostAddress);
+    ChopperClient(baseUrl: ConstantDev.hostAddress, converter: _converter);
 
 Future<Response<T?>> apiRequest<T>(
     Future<Response<T?>> future, BuildContext context) async {
@@ -50,9 +53,9 @@ Future<Response<T?>> apiRequest<T>(
     response = await future.timeout(const Duration(seconds: 10));
     if (!response.isSuccessful) {
       error = jsonDecode(response.error.toString());
-      // var errorDecoded = jsonDecode(response.error.toString());
-      // var errorCode = errorDecoded['errorCode'];
-      // var args = errorDecoded['args'] as List;
+      //   var errorDecoded = jsonDecode(response.error.toString());
+      //   var errorCode = errorDecoded['errorCode'];
+      //   var args = errorDecoded['args'] as List;
     }
   } catch (e) {
     debugPrint('$e');
