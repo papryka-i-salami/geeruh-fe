@@ -37,8 +37,8 @@ pipeline {
         // }
         stage('Publish') {
              steps {
-                sh "zip -r build${env.VERSION}.zip build/web"
-                sh "curl -v -u ${env.NEXUS_USR}:${env.NEXUS_PSW} --upload-file ./build${env.VERSION}.zip http://20.4.227.77:8081/repository/geeruh-fe/"
+                sh "zip -r build${currentBuild.number}.zip build/web"
+                sh "curl -v -u ${env.NEXUS_USR}:${env.NEXUS_PSW} --upload-file ./build${currentBuild.number}.zip http://20.4.227.77:8081/repository/geeruh-fe/"
             }
         }
         
