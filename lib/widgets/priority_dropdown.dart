@@ -9,7 +9,7 @@ final List<Image> priorityImages = <Image>[
   Image.asset('images/PriorityTop.png'),
 ];
 
-String? currentValue = priorityLevel[0];
+String currentValue = priorityLevel[0];
 
 class PriorityDropdown extends StatefulWidget {
   const PriorityDropdown({super.key, this.width = 150, this.heigth = 40});
