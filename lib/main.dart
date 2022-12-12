@@ -5,6 +5,7 @@ import 'package:geeruh/cookies/cookie_service.dart';
 import 'package:geeruh/cookies/cookie_store.dart';
 import 'package:geeruh/geeruh_navigator.dart';
 import 'package:geeruh/global_constants.dart';
+import 'package:geeruh/theme.dart';
 import 'package:provider/provider.dart' as provider;
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -29,6 +30,7 @@ class MyApp extends StatelessWidget {
       MaterialApp(
           title: 'Geeruh',
           initialRoute: ConstantScreens.startScreen,
+          theme: geeruhThemeData(),
           onGenerateRoute: (RouteSettings settings) =>
               geeruhPageRoute(context, settings.name!)),
     );
