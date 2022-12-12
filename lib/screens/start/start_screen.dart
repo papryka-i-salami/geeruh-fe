@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:geeruh/global_constants.dart';
+import 'package:geeruh/widgets/universal_button.dart';
 
 class StartScreen extends StatefulWidget {
   const StartScreen({super.key, required this.title});
@@ -21,23 +22,11 @@ class _StartScreenState extends State<StartScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Center(
-            child: ElevatedButton(
-              key: const Key(ConstantScreens.devScreen),
-              child: const Text("Go to Dev Screen"),
-              onPressed: () {
-                Navigator.pushNamed(context, ConstantScreens.devScreen);
-              },
-            ),
+          child: universalButton(250, 70, () {Navigator.pushNamed(context, ConstantScreens.devScreen);}, "Go to Dev screen"),
           ),
           const SizedBox(height: 30),
           Center(
-            child: ElevatedButton(
-              key: const Key(ConstantScreens.boardScreen),
-              child: const Text("Go to Board Screen"),
-              onPressed: () {
-                Navigator.pushNamed(context, ConstantScreens.boardScreen);
-              },
-            ),
+          child: universalButton(250, 70, () {Navigator.pushNamed(context, ConstantScreens.boardScreen);}, "Go to Board Screen"),
           ),
         ],
       ),
