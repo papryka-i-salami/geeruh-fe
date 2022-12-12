@@ -22,7 +22,7 @@ pipeline {
         stage('Automatic tests') {
             steps {
                 sh 'flutter config --enable-linux-desktop'
-                sh 'flutter test integration_test/automatic_test.dart -d Linux'
+                sh 'xvfb-run flutter test integration_test/automatic_test.dart -d Linux'
             }
         }
     }
