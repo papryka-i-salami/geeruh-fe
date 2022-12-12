@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:geeruh/api/api_build.dart';
 import 'package:geeruh/api/api_classes.dart';
 import 'package:geeruh/api/api_requests.dart';
+import 'package:geeruh/cookies/cookie_store.dart';
 import 'package:mobx/mobx.dart';
 import 'package:provider/provider.dart';
 
@@ -12,6 +13,7 @@ class DevStore = _DevStore with _$DevStore;
 
 abstract class _DevStore with Store {
   late ApiRequests _api;
+  late CookieStore _cookieStore;
 
   ObservableList<IssueRes> issues = ObservableList.of([]);
 
@@ -20,6 +22,7 @@ abstract class _DevStore with Store {
 
   Future<void> init(BuildContext context) async {
     _api = Provider.of<ApiRequests>(context);
+    _cookieStore = Provider.of<CookieStore>(context);
   }
 
   @observable
@@ -49,7 +52,28 @@ abstract class _DevStore with Store {
     final response =
         await _api.login(LoginReq(username: "user", password: "password"));
     if (response.isSuccessful) {
+      Map<String, String> loginResponse = response.headers;
+      String sessionId = loginResponse["set-cookie"] == null
+          ? _cookieStore.cookieValue
+          : loginResponse["set-cookie"]!.split(';')[0];
+
+      _cookieStore.setCookieValue(sessionId);
       _showSnackBar(context, "Zalogowano");
+    }
+  }
+
+  @observable
+  ObservableFuture futureLogout = ObservableFuture.value(null);
+
+  @action
+  Future logout(BuildContext context) {
+    return futureLogout = ObservableFuture(_logout(context));
+  }
+
+  Future _logout(BuildContext context) async {
+    final response = await _api.logout();
+    if (response.isSuccessful) {
+      _showSnackBar(context, "Wylogowano");
     }
   }
 

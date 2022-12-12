@@ -46,6 +46,19 @@ class _DevScreenState extends StateWithLifecycle<DevScreen> {
                 },
               ),
               GestureDetector(
+                key: const Key("LogoutButton"),
+                child: Container(
+                  width: 100,
+                  height: 70,
+                  color: Colors.blue,
+                  alignment: Alignment.center,
+                  child: const Text("Logout"),
+                ),
+                onTap: () async {
+                  _devStore.logout(context);
+                },
+              ),
+              GestureDetector(
                 key: const Key("IssuesButton"),
                 child: Container(
                   width: 100,
