@@ -4,7 +4,6 @@ pipeline {
         NEXUS = credentials('nexus-user-credentials')
         LAUNCH = credentials('launch-azure')
         
-        VERSION = '0_0_1'
         TWINE_REPOSITORY_URL="http://20.4.227.77:8081/repository/geeruh-fe/"
     }
 
@@ -52,7 +51,7 @@ pipeline {
                     remote.failOnError = true
                     remote.user = env.LAUNCH_USR
                     remote.password = env.LAUNCH_PSW
-                    sshCommand remote: remote, command: "sudo nohup ./launch.sh build${env.VERSION}.zip &> /dev/null"
+                    sshCommand remote: remote, command: "sudo nohup ./launch.sh build${currentBuild.number}.zip &> /dev/null"
                 }
             }
         }
