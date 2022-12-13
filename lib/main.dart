@@ -3,6 +3,7 @@ import 'package:geeruh/api/api_build.dart';
 import 'package:geeruh/api/api_requests.dart';
 import 'package:geeruh/geeruh_navigator.dart';
 import 'package:geeruh/global_constants.dart';
+import 'package:geeruh/theme.dart';
 import 'package:provider/provider.dart' as provider;
 
 void main() {
@@ -21,6 +22,7 @@ class MyApp extends StatelessWidget {
       MaterialApp(
           title: 'Geeruh',
           initialRoute: ConstantScreens.startScreen,
+          theme: geeruhThemeData(),
           onGenerateRoute: (RouteSettings settings) =>
               geeruhPageRoute(context, settings.name!)),
     );
