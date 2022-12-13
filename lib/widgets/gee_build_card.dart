@@ -23,11 +23,6 @@ class _GeeBuildCard extends StatefulWidget {
 
 class _GeeBuildCardState extends State<_GeeBuildCard> {
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Align(
       alignment: Alignment.centerLeft,
@@ -48,14 +43,14 @@ class _GeeBuildCardState extends State<_GeeBuildCard> {
               children: [
                 const SizedBox(width: 60),
                 Flexible(
-                    child: Text(
-                  maxLines: 3,
-                  widget.item.description,
-                  textAlign: TextAlign.justify,
-                  overflow: TextOverflow.ellipsis,
-                  style: GeeTextStyles.paragraph3,
-                  // ),
-                )),
+                  child: Text(
+                    maxLines: 3,
+                    widget.item.description,
+                    textAlign: TextAlign.justify,
+                    overflow: TextOverflow.ellipsis,
+                    style: GeeTextStyles.paragraph3,
+                  ),
+                ),
               ],
             ),
             const SizedBox(height: 10),
