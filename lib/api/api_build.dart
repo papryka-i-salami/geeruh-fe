@@ -1,12 +1,17 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:chopper/chopper.dart';
 import 'package:flutter/material.dart';
 import 'package:geeruh/api/api_classes.dart';
+import 'package:geeruh/cookies/cookie_store.dart';
 import 'package:geeruh/global_constants.dart';
 
 JsonToTypeConverter _converter = JsonToTypeConverter(
-  typeToMap: {HelloWorldRes: (json) => HelloWorldRes.fromJson(json)},
+  typeToMap: {
+    HelloWorldRes: (json) => HelloWorldRes.fromJson(json),
+    IssueRes: (json) => IssueRes.fromJson(json)
+  },
 );
 
 class JsonToTypeConverter extends JsonConverter {
@@ -39,8 +44,28 @@ class JsonToTypeConverter extends JsonConverter {
   }
 }
 
-ChopperClient initChopperClient() =>
-    ChopperClient(baseUrl: ConstantDev.hostAddress);
+class CookieInterceptor extends RequestInterceptor {
+  final CookieStore _cookieStore;
+
+  CookieInterceptor(this._cookieStore);
+
+  @override
+  FutureOr<Request> onRequest(Request request) async {
+    String cookieValue = _cookieStore.cookieValue;
+
+    return request.copyWith(
+      headers: {
+        ...{"Cookie": cookieValue},
+        ...request.headers,
+      },
+    );
+  }
+}
+
+ChopperClient initChopperClient(CookieStore cookieStore) => ChopperClient(
+    baseUrl: ConstantDev.hostAddress,
+    converter: _converter,
+    interceptors: [CookieInterceptor(cookieStore)]);
 
 Future<Response<T?>> apiRequest<T>(
     Future<Response<T?>> future, BuildContext context) async {
@@ -49,10 +74,10 @@ Future<Response<T?>> apiRequest<T>(
   try {
     response = await future.timeout(const Duration(seconds: 10));
     if (!response.isSuccessful) {
-      error = jsonDecode(response.error.toString());
-      // var errorDecoded = jsonDecode(response.error.toString());
-      // var errorCode = errorDecoded['errorCode'];
-      // var args = errorDecoded['args'] as List;
+      error = response.error.toString();
+      //   var errorDecoded = jsonDecode(response.error.toString());
+      //   var errorCode = errorDecoded['errorCode'];
+      //   var args = errorDecoded['args'] as List;
     }
   } catch (e) {
     debugPrint('$e');

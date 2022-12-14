@@ -30,24 +30,53 @@ class _DevScreenState extends StateWithLifecycle<DevScreen> {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Center(
-            child: GestureDetector(
-              key: const Key("HelloWorld"),
-              child: Container(
-                width: 100,
-                height: 70,
-                color: Colors.blue,
-                alignment: Alignment.center,
-                child: const Text(":)"),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              GestureDetector(
+                key: const Key("LoginButton"),
+                child: Container(
+                  width: 100,
+                  height: 70,
+                  color: Colors.blue,
+                  alignment: Alignment.center,
+                  child: const Text("Login"),
+                ),
+                onTap: () async {
+                  _devStore.login(context);
+                },
               ),
-              onTap: () {
-                _devStore.getHelloWorld(context);
-              },
-            ),
+              GestureDetector(
+                key: const Key("LogoutButton"),
+                child: Container(
+                  width: 100,
+                  height: 70,
+                  color: Colors.blue,
+                  alignment: Alignment.center,
+                  child: const Text("Logout"),
+                ),
+                onTap: () async {
+                  _devStore.logout(context);
+                },
+              ),
+              GestureDetector(
+                key: const Key("IssuesButton"),
+                child: Container(
+                  width: 100,
+                  height: 70,
+                  color: Colors.blue,
+                  alignment: Alignment.center,
+                  child: const Text("Issues"),
+                ),
+                onTap: () async {
+                  _devStore.getIssues(context);
+                },
+              ),
+            ],
           ),
           Observer(
             builder: (_) => Center(
-              child: Text(_devStore.greeting),
+              child: Text(_devStore.issues.toString()),
             ),
           ),
           Row(
