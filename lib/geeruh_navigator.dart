@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:geeruh/global_constants.dart';
 import 'package:geeruh/screens/board/board_screen.dart';
 import 'package:geeruh/screens/dev/dev_screen.dart';
+import 'package:geeruh/screens/login/login_screen.dart';
 import 'package:geeruh/screens/start/start_screen.dart';
 
 Route geeruhPageRoute(BuildContext context, String screen) {
@@ -14,6 +15,11 @@ Route geeruhPageRoute(BuildContext context, String screen) {
         builder: (_) => const StartScreen(
           title: 'Home',
         ),
+      );
+
+    case ConstantScreens.loginScreen:
+      return MaterialPageRoute(
+        builder: (_) => const LoginScreen(),
       );
 
     case ConstantScreens.boardScreen:

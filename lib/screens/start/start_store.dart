@@ -6,11 +6,11 @@ import 'package:geeruh/main.dart';
 import 'package:mobx/mobx.dart';
 import 'package:provider/provider.dart';
 
-part 'dev_store.g.dart';
+part 'start_store.g.dart';
 
-class DevStore extends _DevStore with _$DevStore {}
+class StartStore extends _StartStore with _$StartStore {}
 
-abstract class _DevStore with Store {
+abstract class _StartStore with Store {
   late ApiRequests _api;
 
   ObservableList<IssueRes> issues = ObservableList.of([]);
@@ -37,12 +37,12 @@ abstract class _DevStore with Store {
     final response = await apiRequest(_api.getIssues(), context);
     if (response.isSuccessful) {
       issues = ObservableList.of(response.body!);
-      _showSnackBar("Pobrano issues");
+      _showSnackBar(navigatorKey.currentContext!, "Pobrano issues");
     }
   }
 }
 
-_showSnackBar(String text) {
+_showSnackBar(BuildContext context, String text) {
   SnackBar snackBar = SnackBar(content: Text(text));
-  ScaffoldMessenger.of(navigatorKey.currentContext!).showSnackBar(snackBar);
+  ScaffoldMessenger.of(context).showSnackBar(snackBar);
 }

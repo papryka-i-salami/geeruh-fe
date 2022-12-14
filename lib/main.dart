@@ -28,7 +28,8 @@ class MyApp extends StatelessWidget {
     return _wrapWithProviders(
       MaterialApp(
           title: 'Geeruh',
-          initialRoute: ConstantScreens.startScreen,
+          navigatorKey: navigatorKey,
+          initialRoute: ConstantScreens.loginScreen,
           onGenerateRoute: (RouteSettings settings) =>
               geeruhPageRoute(context, settings.name!)),
     );
@@ -45,6 +46,8 @@ Widget _wrapWithProviders(MaterialApp matieralApp) => provider.MultiProvider(
       providers: _providers,
       child: matieralApp,
     );
+
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 class Counter {
   int value = 0;

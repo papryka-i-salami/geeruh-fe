@@ -3,7 +3,9 @@ import 'package:mobx/mobx.dart';
 
 part 'cookie_store.g.dart';
 
-class CookieStore = _CookieStore with _$CookieStore;
+class CookieStore extends _CookieStore with _$CookieStore {
+  CookieStore(super.cookieService);
+}
 
 abstract class _CookieStore with Store {
   final CookieService _cookieService;

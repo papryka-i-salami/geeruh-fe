@@ -5,8 +5,7 @@ import 'package:provider/provider.dart';
 
 part 'board_store.g.dart';
 
-// ignore: library_private_types_in_public_api
-class BoardStore = _BoardStore with _$BoardStore;
+class BoardStore extends _BoardStore with _$BoardStore {}
 
 abstract class _BoardStore with Store {
   late ApiRequests _api;

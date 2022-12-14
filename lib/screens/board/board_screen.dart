@@ -6,8 +6,7 @@ class BoardScreen extends StatefulWidget {
   const BoardScreen({super.key});
 
   @override
-  // ignore: library_private_types_in_public_api
-  _BoardScreenState createState() => _BoardScreenState();
+  StateWithLifecycle<BoardScreen> createState() => _BoardScreenState();
 }
 
 class _BoardScreenState extends StateWithLifecycle<BoardScreen> {
