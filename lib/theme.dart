@@ -100,5 +100,12 @@ class GeeTextStyles {
     fontSize: 14,
     fontFamily: GeeFont.publicSansRegular,
   );
-  
+}
+
+ThemeData geeruhThemeData() {
+  return ThemeData(
+      appBarTheme: AppBarTheme(color: GeeColors.primary1),
+      scaffoldBackgroundColor: GeeColors.gray10,
+      textTheme: TextTheme(
+          bodyText1: GeeTextStyles.heading5.copyWith(color: GeeColors.gray2)));
 }
