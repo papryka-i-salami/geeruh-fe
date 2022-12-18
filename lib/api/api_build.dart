@@ -7,6 +7,7 @@ import 'package:geeruh/api/api_classes.dart';
 import 'package:geeruh/cookies/cookie_store.dart';
 import 'package:geeruh/global_constants.dart';
 import 'package:geeruh/main.dart';
+import 'package:geeruh/theme.dart';
 
 JsonToTypeConverter _converter = JsonToTypeConverter(
   typeToMap: {
@@ -64,7 +65,7 @@ class CookieInterceptor extends RequestInterceptor {
 }
 
 ChopperClient initChopperClient(CookieStore cookieStore) => ChopperClient(
-    baseUrl: ConstantDev.hostAddress,
+    baseUrl: Uri.parse(ConstantDev.hostAddress),
     converter: _converter,
     interceptors: [CookieInterceptor(cookieStore)]);
 
@@ -75,11 +76,8 @@ Future<Response<T?>> apiRequest<T>(
   try {
     response = await future.timeout(const Duration(seconds: 10));
     if (!response.isSuccessful) {
-      errorMessage = response.error.toString();
-      // var errorDecoded = jsonDecode(response.error.toString());
-      // errorMessage = errorDecoded["message"];
-      //   var errorCode = errorDecoded['errorCode'];
-      //   var args = errorDecoded['args'] as List;
+      Map jsonMap = Map.from(json.decode(response.error.toString()).first);
+      errorMessage = jsonMap["message"];
     }
   } catch (e) {
     debugPrint('$e');
@@ -93,6 +91,12 @@ Future<Response<T?>> apiRequest<T>(
 }
 
 _showSnackBar(String text) {
-  SnackBar snackBar = SnackBar(content: Text(text));
+  SnackBar snackBar = SnackBar(
+    content: Text(
+      text,
+      style: GeeTextStyles.paragraph2,
+    ),
+    backgroundColor: GeeColors.red,
+  );
   ScaffoldMessenger.of(navigatorKey.currentContext!).showSnackBar(snackBar);
 }
