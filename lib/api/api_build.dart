@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:geeruh/api/api_classes.dart';
 import 'package:geeruh/cookies/cookie_store.dart';
 import 'package:geeruh/global_constants.dart';
+import 'package:geeruh/main.dart';
+import 'package:geeruh/theme.dart';
 
 JsonToTypeConverter _converter = JsonToTypeConverter(
   typeToMap: {
@@ -63,35 +65,38 @@ class CookieInterceptor extends RequestInterceptor {
 }
 
 ChopperClient initChopperClient(CookieStore cookieStore) => ChopperClient(
-    baseUrl: ConstantDev.hostAddress,
+    baseUrl: Uri.parse(ConstantDev.hostAddress),
     converter: _converter,
     interceptors: [CookieInterceptor(cookieStore)]);
 
 Future<Response<T?>> apiRequest<T>(
     Future<Response<T?>> future, BuildContext context) async {
   late Response<T?> response;
-  String error = "";
+  String errorMessage = "";
   try {
     response = await future.timeout(const Duration(seconds: 10));
     if (!response.isSuccessful) {
-      error = response.error.toString();
-      //   var errorDecoded = jsonDecode(response.error.toString());
-      //   var errorCode = errorDecoded['errorCode'];
-      //   var args = errorDecoded['args'] as List;
+      Map jsonMap = Map.from(json.decode(response.error.toString()).first);
+      errorMessage = jsonMap["message"];
     }
   } catch (e) {
     debugPrint('$e');
-    error = "Wystapil blad";
+    errorMessage = "Wystapil blad";
   }
-  if (error.isNotEmpty) {
-    // ignore: use_build_context_synchronously
-    _showSnackBar(context, error);
-    return Future.error(error);
+  if (errorMessage.isNotEmpty) {
+    _showSnackBar(errorMessage);
+    return Future.error(errorMessage);
   }
   return Future.value(response);
 }
 
-_showSnackBar(BuildContext context, String text) {
-  SnackBar snackBar = SnackBar(content: Text(text));
-  ScaffoldMessenger.of(context).showSnackBar(snackBar);
+_showSnackBar(String text) {
+  SnackBar snackBar = SnackBar(
+    content: Text(
+      text,
+      style: GeeTextStyles.paragraph2,
+    ),
+    backgroundColor: GeeColors.red,
+  );
+  ScaffoldMessenger.of(navigatorKey.currentContext!).showSnackBar(snackBar);
 }

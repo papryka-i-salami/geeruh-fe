@@ -9,8 +9,7 @@ class DevScreen extends StatefulWidget {
   const DevScreen({super.key});
 
   @override
-  // ignore: library_private_types_in_public_api
-  _DevScreenState createState() => _DevScreenState();
+  StateWithLifecycle<DevScreen> createState() => _DevScreenState();
 }
 
 class _DevScreenState extends StateWithLifecycle<DevScreen> {
@@ -33,32 +32,6 @@ class _DevScreenState extends StateWithLifecycle<DevScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              GestureDetector(
-                key: const Key("LoginButton"),
-                child: Container(
-                  width: 100,
-                  height: 70,
-                  color: Colors.blue,
-                  alignment: Alignment.center,
-                  child: const Text("Login"),
-                ),
-                onTap: () async {
-                  _devStore.login(context);
-                },
-              ),
-              GestureDetector(
-                key: const Key("LogoutButton"),
-                child: Container(
-                  width: 100,
-                  height: 70,
-                  color: Colors.blue,
-                  alignment: Alignment.center,
-                  child: const Text("Logout"),
-                ),
-                onTap: () async {
-                  _devStore.logout(context);
-                },
-              ),
               GestureDetector(
                 key: const Key("IssuesButton"),
                 child: Container(
