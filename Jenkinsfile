@@ -17,6 +17,7 @@ pipeline {
         stage('Build') {
             steps {
                 sh 'flutter pub get'
+                sh 'flutter pub upgrade'
                 sh 'flutter pub run build_runner build --delete-conflicting-outputs'
                 sh 'flutter build web --release'
             }
