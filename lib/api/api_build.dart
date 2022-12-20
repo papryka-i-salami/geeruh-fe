@@ -65,7 +65,7 @@ class CookieInterceptor extends RequestInterceptor {
 }
 
 ChopperClient initChopperClient(CookieStore cookieStore) => ChopperClient(
-    baseUrl: Uri.parse(ConstantDev.hostAddress),
+    baseUrl: ConstantDev.hostAddress,
     converter: _converter,
     interceptors: [CookieInterceptor(cookieStore)]);
 
