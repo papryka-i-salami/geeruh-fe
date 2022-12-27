@@ -3,7 +3,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:geeruh/screens/dev/dev_store.dart';
 import 'package:geeruh/theme.dart';
 import 'package:geeruh/utils/state_with_lifecycle.dart';
-import 'package:geeruh/widgets/priority_dropdown.dart';
+import 'package:geeruh/widgets/gee_priority_dropdown.dart';
 
 class DevScreen extends StatefulWidget {
   const DevScreen({super.key});
@@ -104,7 +104,7 @@ class _DevScreenState extends StateWithLifecycle<DevScreen> {
             Text("Paragraph2", style: GeeTextStyles.paragraph2),
             Text("Paragraph3", style: GeeTextStyles.paragraph3),
           ]),
-          const PriorityDropdown(),
+          const GeePriorityDropdown(),
         ],
       ),
     );

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:geeruh/screens/login/login_store.dart';
 import 'package:geeruh/theme.dart';
 import 'package:geeruh/utils/state_with_lifecycle.dart';
-import 'package:geeruh/widgets/universal_button.dart';
+import 'package:geeruh/widgets/gee_universal_button.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -90,7 +90,7 @@ class _LoginScreenState extends StateWithLifecycle<LoginScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              universalButton(250, 70, () {
+              geeUniversalButton(250, 70, () {
                 _loginStore.login(context);
               }, "Log in"),
             ],
