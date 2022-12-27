@@ -47,3 +47,49 @@ class LoginReq {
 
   Map<String, dynamic> toJson() => _$LoginReqToJson(this);
 }
+
+@JsonSerializable()
+class RegisterReq {
+  String login;
+  String password;
+  String email;
+  String firstName;
+  String secondName;
+  String surname;
+  RegisterReq({
+    required this.login,
+    required this.password,
+    required this.email,
+    required this.firstName,
+    required this.secondName,
+    required this.surname,
+  });
+
+  factory RegisterReq.fromJson(Map<String, dynamic> json) =>
+      _$RegisterReqFromJson(json);
+
+  Map<String, dynamic> toJson() => _$RegisterReqToJson(this);
+}
+
+@JsonSerializable()
+class RegisterRes {
+  String userId;
+  String login;
+  String email;
+  String firstName;
+  String secondName;
+  String surname;
+  RegisterRes({
+    required this.userId,
+    required this.login,
+    required this.email,
+    required this.firstName,
+    required this.secondName,
+    required this.surname,
+  });
+
+  factory RegisterRes.fromJson(Map<String, dynamic> json) =>
+      _$RegisterResFromJson(json);
+
+  Map<String, dynamic> toJson() => _$RegisterResToJson(this);
+}

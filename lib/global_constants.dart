@@ -3,6 +3,7 @@ class ConstantScreens {
   static const loginScreen = "LoginScreen";
   static const devScreen = "DevScreen";
   static const boardScreen = "BoardScreen";
+  static const registerScreen = "RegisterScreen";
 }
 
 class ConstantDev {

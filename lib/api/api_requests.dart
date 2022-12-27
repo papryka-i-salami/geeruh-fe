@@ -20,4 +20,9 @@ abstract class ApiRequests extends ChopperService {
 
   @Get(path: "/logout")
   Future<Response> logout();
+
+// -------------------------------------------
+
+  @Post(path: "/users")
+  Future<Response<RegisterRes>> register(@Body() RegisterReq registerBody);
 }
