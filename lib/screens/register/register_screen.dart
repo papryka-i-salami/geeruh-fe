@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:geeruh/screens/register/register_store.dart';
 import 'package:geeruh/theme.dart';
 import 'package:geeruh/utils/state_with_lifecycle.dart';
-import 'package:geeruh/widgets/universal_button.dart';
+import 'package:geeruh/widgets/gee_universal_button.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -171,7 +171,7 @@ class _RegisterScreenState extends StateWithLifecycle<RegisterScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              universalButton(350, 70, () {
+              geeUniversalButton(350, 70, () {
                 _registerStore.register(context);
               }, "Submit"),
             ],

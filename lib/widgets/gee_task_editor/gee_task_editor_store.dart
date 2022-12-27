@@ -3,11 +3,12 @@ import 'package:geeruh/api/api_requests.dart';
 import 'package:mobx/mobx.dart';
 import 'package:provider/provider.dart';
 
-part 'board_store.g.dart';
+part 'gee_task_editor_store.g.dart';
 
-class BoardStore extends _BoardStore with _$BoardStore {}
+class GeeTaskEditorStore extends _GeeTaskEditorStore with _$GeeTaskEditorStore {
+}
 
-abstract class _BoardStore with Store {
+abstract class _GeeTaskEditorStore with Store {
   // ignore: unused_field
   late ApiRequests _api;
 
