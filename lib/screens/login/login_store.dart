@@ -25,23 +25,26 @@ abstract class _LoginStore with Store {
   ObservableFuture futureLogin = ObservableFuture.value(null);
 
   @observable
-  String username = "";
+  String login = "";
   @observable
   String password = "";
 
   @action
-  Future login(BuildContext context) {
+  Future loginRequest(BuildContext context) {
     return futureLogin = ObservableFuture(_login(context));
   }
 
   Future _login(BuildContext context) async {
     final response = await apiRequest(
-        _api.login(LoginReq(username: username, password: password)), context);
+        _api.login(LoginReq(username: login, password: password)), context);
     if (response.isSuccessful) {
       Map<String, String> loginResponse = response.headers;
       String sessionId = loginResponse["set-cookie"] == null
           ? _cookieStore.cookieValue
           : loginResponse["set-cookie"]!.split(';')[0];
+
+      login = "";
+      password = "";
 
       _cookieStore.setCookieValue(sessionId);
       Navigator.pushNamed(
