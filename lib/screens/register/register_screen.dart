@@ -181,12 +181,3 @@ class _RegisterScreenState extends StateWithLifecycle<RegisterScreen> {
     );
   }
 }
-
-// {
-//   "login": "string",
-//   "password": "string",
-//   "email": "string",
-//   "firstName": "string",
-//   "secondName": "string",
-//   "surname": "string"
-// }
