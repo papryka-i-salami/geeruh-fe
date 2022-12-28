@@ -17,12 +17,14 @@ class HelloWorldRes {
 @JsonSerializable()
 class IssueRes {
   String issueId;
+  String statusCode;
   String type;
   String? summary;
   String? description;
 
   IssueRes(
       {required this.issueId,
+      required this.statusCode,
       required this.type,
       this.summary,
       this.description});
@@ -92,4 +94,18 @@ class RegisterRes {
       _$RegisterResFromJson(json);
 
   Map<String, dynamic> toJson() => _$RegisterResToJson(this);
+}
+
+@JsonSerializable()
+class PutIssueReq {
+  String type;
+  String? summary;
+  String? description;
+
+  PutIssueReq({required this.type, this.summary, this.description});
+
+  factory PutIssueReq.fromJson(Map<String, dynamic> json) =>
+      _$PutIssueReqFromJson(json);
+
+  Map<String, dynamic> toJson() => _$PutIssueReqToJson(this);
 }

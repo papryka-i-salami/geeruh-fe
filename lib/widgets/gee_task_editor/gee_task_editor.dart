@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:geeruh/screens/board/board_store.dart';
 import 'package:geeruh/theme.dart';
 import 'package:geeruh/utils/state_with_lifecycle.dart';
 import 'package:geeruh/widgets/gee_build_card.dart';
 import 'package:geeruh/widgets/gee_priority_dropdown.dart';
 import 'package:geeruh/widgets/gee_task_editor/gee_task_editor_store.dart';
+import 'package:geeruh/widgets/gee_universal_button.dart';
 
 class GeeTaskEditor extends StatefulWidget {
-  const GeeTaskEditor({super.key, required this.item});
+  const GeeTaskEditor(
+      {super.key, required this.item, required this.boardStore});
 
   final RichTextItem item;
+  final BoardStore boardStore;
 
   @override
   StateWithLifecycle<GeeTaskEditor> createState() => _GeeTaskEditorState();
@@ -19,7 +23,7 @@ class _GeeTaskEditorState extends StateWithLifecycle<GeeTaskEditor> {
 
   @override
   void preFirstBuildInit() {
-    _taskEditorStore.init(context);
+    _taskEditorStore.init(context, widget.item.issue, widget.boardStore);
   }
 
   @override
@@ -34,9 +38,23 @@ class _GeeTaskEditorState extends StateWithLifecycle<GeeTaskEditor> {
           borderRadius: BorderRadius.circular(16),
         ),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text(
-            widget.item.title,
-            style: GeeTextStyles.heading1.copyWith(color: GeeColors.gray2),
+          Row(
+            children: [
+              Text(
+                "${widget.item.issue.type} -",
+                style: GeeTextStyles.heading1.copyWith(color: GeeColors.gray2),
+              ),
+              Expanded(
+                child: TextFormField(
+                  onChanged: (newString) {
+                    _taskEditorStore.summary = newString;
+                  },
+                  initialValue: widget.item.issue.summary,
+                  style:
+                      GeeTextStyles.heading1.copyWith(color: GeeColors.gray2),
+                ),
+              ),
+            ],
           ),
           Container(
               color: GeeColors.secondary1, width: popupWidth * 0.5, height: 3),
@@ -85,11 +103,11 @@ class _GeeTaskEditorState extends StateWithLifecycle<GeeTaskEditor> {
                   ),
                 ]),
                 const SizedBox(width: 15),
-                _taskDescription(widget.item.description, popupWidth * 0.35),
+                _taskDescription(
+                    widget.item.issue.description ?? "", popupWidth * 0.35),
               ],
             ),
           ),
-          // ]),
         ]));
   }
 
@@ -112,8 +130,13 @@ class _GeeTaskEditorState extends StateWithLifecycle<GeeTaskEditor> {
           child: SingleChildScrollView(
             child: Column(
               children: [
-                Text(
-                  description,
+                TextFormField(
+                  onChanged: (newString) {
+                    _taskEditorStore.description = newString;
+                  },
+                  keyboardType: TextInputType.multiline,
+                  maxLines: null,
+                  initialValue: widget.item.issue.description,
                   style: GeeTextStyles.paragraph3,
                   textAlign: TextAlign.justify,
                 ),
@@ -163,36 +186,39 @@ class _GeeTaskEditorState extends StateWithLifecycle<GeeTaskEditor> {
         children: [
           Expanded(
             child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Text(
-                    "Assignor",
-                    style: GeeTextStyles.heading2
-                        .copyWith(color: GeeColors.secondary1),
-                  ),
-                  const SizedBox(height: 10),
-                  Column(
-                      //TODO remove example and comment
-                      //Insert individual task contributor (JUST ONE) like this:
-                      children: [_taskContributor("Alan Baker")],
-                      ),
-                  const SizedBox(height: 10),
-                  Text(
-                    "Assignees",
-                    style: GeeTextStyles.heading2
-                        .copyWith(color: GeeColors.secondary1),
-                  ),
-                  Column(
-                    children: [
-                      //TODO remove example and comment
-                      //Insert individual task contributor (JUST ONE) like this:
-                      _taskContributor("Crystal Dyson"),
-                      _taskContributor("Ekaterina Fritz"),
-                      _taskContributor("Gary Haywood"),
-                      _taskContributor("Ingmar Jensen")
-                    ],
-                  ),
-                ]),
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Text(
+                  "Assignor",
+                  style: GeeTextStyles.heading2
+                      .copyWith(color: GeeColors.secondary1),
+                ),
+                const SizedBox(height: 10),
+                Column(
+                  //TODO remove example and comment
+                  //Insert individual task contributor (JUST ONE) like this:
+                  children: [_taskContributor("Alan Baker")],
+                ),
+                const SizedBox(height: 10),
+                Text(
+                  "Assignees",
+                  style: GeeTextStyles.heading2
+                      .copyWith(color: GeeColors.secondary1),
+                ),
+                Column(
+                  children: [
+                    //TODO remove example and comment
+                    //Insert individual task contributor (JUST ONE) like this:
+                    _taskContributor("Crystal Dyson"),
+                    _taskContributor("Ekaterina Fritz"),
+                    _taskContributor("Gary Haywood"),
+                    _taskContributor("Ingmar Jensen")
+                  ],
+                ),
+                const SizedBox(height: 150),
+                _approveButton(),
+              ],
+            ),
           ),
         ],
       ),
@@ -221,5 +247,13 @@ class _GeeTaskEditorState extends StateWithLifecycle<GeeTaskEditor> {
         ],
       ),
     );
+  }
+
+  Widget _approveButton() {
+    return geeUniversalButton(200, 100, () async {
+      await _taskEditorStore.updateIssue(context, widget.item.id);
+      // await widget.boardStore.getIssues(navigatorKey.currentContext!);
+      setState(() {});
+    }, "Approve");
   }
 }
