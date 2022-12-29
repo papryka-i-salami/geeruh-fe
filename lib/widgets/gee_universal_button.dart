@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:geeruh/theme.dart';
 
-Widget universalButton(double width, double heigth, Function onPressed,
+Widget geeUniversalButton(double width, double heigth, Function onPressed,
     [String caption = 'Button']) {
   return ElevatedButton(
     style: ElevatedButton.styleFrom(

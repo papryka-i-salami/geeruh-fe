@@ -1,10 +1,15 @@
 import 'package:appflowy_board/appflowy_board.dart';
 import 'package:flutter/material.dart';
+import 'package:geeruh/api/api_classes.dart';
+import 'package:geeruh/screens/board/board_store.dart';
 import 'package:geeruh/theme.dart';
+import 'package:geeruh/widgets/gee_popup.dart';
+import 'package:geeruh/widgets/gee_priority_dropdown.dart';
+import 'package:geeruh/widgets/gee_task_editor/gee_task_editor.dart';
 
-Widget buildCard(AppFlowyGroupItem item) {
+Widget buildCard(AppFlowyGroupItem item, BoardStore boardStore) {
   if (item is RichTextItem) {
-    return _GeeBuildCard(item: item);
+    return _GeeBuildCard(item: item, boardStore: boardStore);
   }
 
   throw UnimplementedError();
@@ -12,8 +17,10 @@ Widget buildCard(AppFlowyGroupItem item) {
 
 class _GeeBuildCard extends StatefulWidget {
   final RichTextItem item;
+  final BoardStore boardStore;
   const _GeeBuildCard({
     required this.item,
+    required this.boardStore,
     Key? key,
   }) : super(key: key);
 
@@ -27,25 +34,39 @@ class _GeeBuildCardState extends State<_GeeBuildCard> {
     return Align(
       alignment: Alignment.centerLeft,
       child: Container(
-        height: 130,
+        height: 140,
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              widget.item.title,
-              style: GeeTextStyles.paragraph2,
-              textAlign: TextAlign.left,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  widget.item.issue.summary ?? "",
+                  style: GeeTextStyles.paragraph2,
+                  textAlign: TextAlign.left,
+                ),
+                _editButton(widget.item),
+              ],
             ),
             const SizedBox(height: 10),
             Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const SizedBox(width: 60),
-                Flexible(
+                SizedBox(
+                    height: 16,
+                    width: 16,
+                    child: FittedBox(
+                      fit: BoxFit.fill,
+                      child: priorityImages[widget.item.priority],
+                    )),
+                const SizedBox(width: 10),
+                Expanded(
                   child: Text(
                     maxLines: 3,
-                    widget.item.description,
+                    widget.item.issue.description ?? "",
                     textAlign: TextAlign.justify,
                     overflow: TextOverflow.ellipsis,
                     style: GeeTextStyles.paragraph3,
@@ -58,7 +79,7 @@ class _GeeBuildCardState extends State<_GeeBuildCard> {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 Text(
-                  widget.item.code,
+                  widget.item.issue.issueId,
                   style: GeeTextStyles.paragraph3,
                 )
               ],
@@ -68,28 +89,37 @@ class _GeeBuildCardState extends State<_GeeBuildCard> {
       ),
     );
   }
+
+  Widget _editButton(RichTextItem item) {
+    return MouseRegion(
+      cursor: SystemMouseCursors.click,
+      child: GestureDetector(
+          child: Image.asset(
+            "images/EditPencil.png",
+            width: 24,
+            height: 24,
+            color: GeeColors.secondary2,
+          ),
+          onTap: () async {
+            await GeePopup(context,
+                    content: GeeTaskEditor(
+                        item: item, boardStore: widget.boardStore))
+                .show();
+            // await widget.boardStore.getIssues(navigatorKey.currentContext!);
+          }),
+    );
+  }
 }
 
 class RichTextItem extends AppFlowyGroupItem {
-  final String title;
-  final String description;
+  final IssueRes issue;
   final Priority priority;
-  final String code;
 
   RichTextItem({
-    required this.title,
-    required this.description,
+    required this.issue,
     required this.priority,
-    required this.code,
   });
 
   @override
-  String get id => title;
-}
-
-enum Priority {
-  top,
-  high,
-  medium,
-  low,
+  String get id => issue.issueId;
 }

@@ -8,6 +8,7 @@ import 'package:geeruh/global_constants.dart';
 import 'package:geeruh/theme.dart';
 import 'package:provider/provider.dart' as provider;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:desktop_window/desktop_window.dart';
 
 Future<void> main() async {
   SharedPreferences preferences = await SharedPreferences.getInstance();
@@ -19,6 +20,7 @@ Future<void> main() async {
   _addProvider(cookieStore);
   _addProvider(ApiRequests.create(chopper));
   runApp(const MyApp());
+  DesktopWindow.setMinWindowSize(const Size(1000, 1000));
 }
 
 class MyApp extends StatelessWidget {

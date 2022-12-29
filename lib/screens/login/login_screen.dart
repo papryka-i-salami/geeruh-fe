@@ -1,9 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:geeruh/global_constants.dart';
+import 'package:geeruh/main.dart';
 import 'package:geeruh/screens/login/login_store.dart';
 import 'package:geeruh/theme.dart';
 import 'package:geeruh/utils/state_with_lifecycle.dart';
-import 'package:geeruh/widgets/universal_button.dart';
+import 'package:geeruh/widgets/gee_universal_button.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -23,9 +25,6 @@ class _LoginScreenState extends StateWithLifecycle<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Login screen"),
-      ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -48,18 +47,17 @@ class _LoginScreenState extends StateWithLifecycle<LoginScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               SizedBox(
-                // width: MediaQuery.of(context).size.width / 2.5,
                 width: 500,
                 height: 70,
                 child: TextField(
                   onChanged: (newString) {
-                    _loginStore.username = newString;
+                    _loginStore.login = newString;
                   },
                   decoration: const InputDecoration(
-                      prefixIcon: Icon(CupertinoIcons.envelope),
+                      prefixIcon: Icon(CupertinoIcons.person),
                       border: OutlineInputBorder(),
-                      labelText: 'Username',
-                      hintText: 'Enter username'),
+                      labelText: 'Login',
+                      hintText: 'Enter login'),
                 ),
               ),
             ],
@@ -68,7 +66,6 @@ class _LoginScreenState extends StateWithLifecycle<LoginScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               SizedBox(
-                // width: MediaQuery.of(context).size.width / 2.5,
                 width: 500,
                 height: 70,
                 child: TextField(
@@ -90,8 +87,15 @@ class _LoginScreenState extends StateWithLifecycle<LoginScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              universalButton(250, 70, () {
-                _loginStore.login(context);
+              geeUniversalButton(250, 70, () {
+                Navigator.pushNamed(navigatorKey.currentContext!,
+                    ConstantScreens.registerScreen);
+              }, "Sign up"),
+              const SizedBox(
+                width: 15,
+              ),
+              geeUniversalButton(250, 70, () {
+                _loginStore.loginRequest(context);
               }, "Log in"),
             ],
           ),

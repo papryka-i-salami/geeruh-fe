@@ -1,13 +1,16 @@
 import 'package:appflowy_board/appflowy_board.dart';
 import 'package:flutter/material.dart';
+import 'package:geeruh/screens/board/board_store.dart';
 import 'package:geeruh/theme.dart';
 import 'package:geeruh/widgets/gee_build_card.dart';
 
 class GeeKanban extends StatefulWidget {
   final List<AppFlowyGroupData> groups;
+  final BoardStore boardStore;
   const GeeKanban({
     Key? key,
     required this.groups,
+    required this.boardStore,
   }) : super(key: key);
 
   @override
@@ -48,10 +51,9 @@ class _GeeKanbanState extends State<GeeKanban> {
                 key: ValueKey(groupItem.id),
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(8),
-                    border:
-                        Border.all(color: GeeColors.gray1),
+                    border: Border.all(color: GeeColors.gray1),
                     color: GeeColors.white),
-                child: buildCard(groupItem),
+                child: buildCard(groupItem, widget.boardStore),
               ),
           boardScrollController: boardController,
           // // DO NOT REMOVE
