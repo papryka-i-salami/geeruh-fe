@@ -34,6 +34,20 @@ class IssueRes {
 }
 
 @JsonSerializable()
+class ProjectRes {
+  String code;
+  String name;
+  String? description;
+
+  ProjectRes({required this.code, required this.name, this.description});
+
+  factory ProjectRes.fromJson(Map<String, dynamic> json) =>
+      _$ProjectResFromJson(json);
+
+  Map<String, dynamic> toJson() => _$ProjectResToJson(this);
+}
+
+@JsonSerializable()
 class LoginReq {
   String username;
   String password;

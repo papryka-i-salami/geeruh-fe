@@ -15,6 +15,11 @@ abstract class ApiRequests extends ChopperService {
 
 // -------------------------------------------
 
+  @Get(path: "/projects")
+  Future<Response<List<ProjectRes>>> getProjects();
+
+// -------------------------------------------
+
   @Post(path: "/login")
   Future<Response> login(@Body() LoginReq loginBody);
 

@@ -12,7 +12,8 @@ import 'package:geeruh/theme.dart';
 JsonToTypeConverter _converter = JsonToTypeConverter(
   typeToMap: {
     HelloWorldRes: (json) => HelloWorldRes.fromJson(json),
-    IssueRes: (json) => IssueRes.fromJson(json)
+    IssueRes: (json) => IssueRes.fromJson(json),
+    ProjectRes: (json) => ProjectRes.fromJson(json)
   },
 );
 
@@ -65,7 +66,7 @@ class CookieInterceptor extends RequestInterceptor {
 }
 
 ChopperClient initChopperClient(CookieStore cookieStore) => ChopperClient(
-    baseUrl: Uri.parse(ConstantDev.hostAddress),
+    baseUrl: ConstantDev.hostAddress,
     converter: _converter,
     interceptors: [CookieInterceptor(cookieStore)]);
 
