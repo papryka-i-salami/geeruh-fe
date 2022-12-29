@@ -20,9 +20,24 @@ class _BoardScreenState extends StateWithLifecycle<BoardScreen> {
   final BoardStore boardStore = BoardStore();
 
   @override
-  void preFirstBuildInit() {
-    boardStore.init(context);
+  void preFirstBuildInit() async {
+    await boardStore.init(context);
+    AppFlowyGroupController con = AppFlowyGroupController(groupData: group1);
+
+    boardStore.issues
+        .map((issue) => RichTextItem(issue: issue, priority: Priority.medium))
+        .toList()
+        .forEach((element) {
+      con.add(element);
+    });
   }
+
+  final group1 = AppFlowyGroupData(
+      id: "Backlog", name: "Backlog", items: <AppFlowyGroupItem>[]);
+  final group2 = AppFlowyGroupData(
+      id: "Selected For Development",
+      name: "Selected For Development",
+      items: <AppFlowyGroupItem>[]);
 
   final group3 = AppFlowyGroupData(
       id: "In progress", name: "In progress", items: <AppFlowyGroupItem>[]);
@@ -59,25 +74,7 @@ class _BoardScreenState extends StateWithLifecycle<BoardScreen> {
           border: Border.all(color: GeeColors.gray1)),
       child: GeeKanban(
         key: Key(boardStore.issues.hashCode.toString()),
-        groups: [
-          AppFlowyGroupData(
-              id: "Backlog",
-              name: "Backlog",
-              items: boardStore.issues
-                  .map((issue) =>
-                      RichTextItem(issue: issue, priority: Priority.medium))
-                  .toList()),
-          AppFlowyGroupData(
-              id: "Selected For Development",
-              name: "Selected For Development",
-              items: boardStore.issues
-                  .map((issue) =>
-                      RichTextItem(issue: issue, priority: Priority.medium))
-                  .toList()),
-          group3,
-          group4,
-          group5
-        ],
+        groups: [group1, group2, group3, group4, group5],
         boardStore: boardStore,
       ),
     );
