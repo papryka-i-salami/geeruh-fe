@@ -11,9 +11,14 @@ class BoardStore extends _BoardStore with _$BoardStore {}
 
 abstract class _BoardStore with Store {
   late ApiRequests _api;
-
+  var projectCode = "";
   Future<void> init(BuildContext context) async {
     _api = Provider.of<ApiRequests>(context);
+
+    final arguments = (ModalRoute.of(context)?.settings.arguments ??
+        <String, dynamic>{}) as Map;
+    projectCode = arguments['projectCode'];
+
     await getIssues(context);
   }
 
@@ -31,7 +36,13 @@ abstract class _BoardStore with Store {
   Future _getIssues(BuildContext context) async {
     final response = await apiRequest(_api.getIssues(), context);
     if (response.isSuccessful) {
-      issues = ObservableList.of(response.body!);
+      issues.clear();
+      for (var issue in ObservableList.of(response.body!)) {
+        var issueId = issue.issueId.split("-")[0];
+        if (issueId == projectCode) {
+          issues.add(issue);
+        }
+      }
     }
   }
 }

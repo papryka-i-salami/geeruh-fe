@@ -111,7 +111,11 @@ class _StartScreenState extends StateWithLifecycle<StartScreen> {
         500,
         _startStore.projects
             .map((project) => geeListButton(() {
-                  Navigator.pushNamed(context, ConstantScreens.boardScreen);
+                  Navigator.pushNamed(
+                    context,
+                    ConstantScreens.boardScreen,
+                    arguments: {'projectCode': project.code},
+                  );
                 }, "Board for ${project.name}"))
             .toList(),
         "My Boards");

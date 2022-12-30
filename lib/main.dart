@@ -35,7 +35,7 @@ class MyApp extends StatelessWidget {
           initialRoute: ConstantScreens.loginScreen,
           theme: geeruhThemeData(),
           onGenerateRoute: (RouteSettings settings) =>
-              geeruhPageRoute(context, settings.name!)),
+              geeruhPageRoute(context, settings.name!, settings)),
     );
   }
 }
