@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:geeruh/theme.dart';
 
-Widget titleList(double width, double heigth, List<Widget> entries,
+Widget geeTitleList(double width, double heigth, List<Widget> entries,
     [String title = 'Title']) {
   return Column(
     children: [

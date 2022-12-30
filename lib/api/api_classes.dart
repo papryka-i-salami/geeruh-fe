@@ -123,3 +123,30 @@ class PutIssueReq {
 
   Map<String, dynamic> toJson() => _$PutIssueReqToJson(this);
 }
+
+@JsonSerializable()
+class PutProjectReq {
+  String code;
+  String? name;
+  String? description;
+
+  PutProjectReq({required this.code, this.name, this.description});
+
+  factory PutProjectReq.fromJson(Map<String, dynamic> json) =>
+      _$PutProjectReqFromJson(json);
+
+  Map<String, dynamic> toJson() => _$PutProjectReqToJson(this);
+}
+
+@JsonSerializable()
+class PostProjectReq {
+  String? name;
+  String? description;
+
+  PostProjectReq({this.name, this.description});
+
+  factory PostProjectReq.fromJson(Map<String, dynamic> json) =>
+      _$PostProjectReqFromJson(json);
+
+  Map<String, dynamic> toJson() => _$PostProjectReqToJson(this);
+}
