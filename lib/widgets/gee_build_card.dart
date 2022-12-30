@@ -9,7 +9,10 @@ import 'package:geeruh/widgets/gee_task_editor/gee_task_editor.dart';
 
 Widget buildCard(AppFlowyGroupItem item, BoardStore boardStore) {
   if (item is RichTextItem) {
-    return _GeeBuildCard(item: item, boardStore: boardStore);
+    return _GeeBuildCard(
+      item: item,
+      boardStore: boardStore,
+    );
   }
 
   throw UnimplementedError();
@@ -43,10 +46,13 @@ class _GeeBuildCardState extends State<_GeeBuildCard> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  widget.item.issue.summary ?? "",
-                  style: GeeTextStyles.paragraph2,
-                  textAlign: TextAlign.left,
+                Expanded(
+                  child: Text(
+                    widget.item.issue.summary ?? "",
+                    overflow: TextOverflow.ellipsis,
+                    style: GeeTextStyles.paragraph2,
+                    textAlign: TextAlign.left,
+                  ),
                 ),
                 _editButton(widget.item),
               ],
@@ -102,10 +108,10 @@ class _GeeBuildCardState extends State<_GeeBuildCard> {
           ),
           onTap: () async {
             await GeePopup(context,
-                    content: GeeTaskEditor(
-                        item: item, boardStore: widget.boardStore))
-                .show();
-            // await widget.boardStore.getIssues(navigatorKey.currentContext!);
+                content: GeeTaskEditor(
+                  item: item,
+                  boardStore: widget.boardStore,
+                )).show();
           }),
     );
   }

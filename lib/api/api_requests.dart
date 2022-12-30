@@ -7,12 +7,29 @@ part 'api_requests.chopper.dart';
 abstract class ApiRequests extends ChopperService {
   static ApiRequests create([ChopperClient? client]) => _$ApiRequests(client);
 
+  // -------------------------------------------
+
+  @Get(path: "/statuses")
+  Future<Response<List<StatusRes>>> getStatuses();
+
+  // -------------------------------------------
+
   @Get(path: "/issues")
   Future<Response<List<IssueRes>>> getIssues();
 
   @Put(path: "/issues/{issueId}")
   Future<Response<IssueRes>> updateIssue(
       @Path("issueId") String issueId, @Body() PutIssueReq issueReq);
+
+  @Post(path: "/issues")
+  Future<Response<IssueRes>> postIssue(
+      @Body() PutIssueReq issueReq,
+      @Query("projectCode") String projectCode,
+      @Query("statusCode") String statusCode);
+
+  @Put(path: "/issues/{issueId}/status")
+  Future<Response<IssueRes>> updateIssueStatus(
+      @Path("issueId") String issueId, @Body() ChangeIssueStatusReq statusCode);
 
 // -------------------------------------------
 

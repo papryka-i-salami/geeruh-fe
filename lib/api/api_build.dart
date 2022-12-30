@@ -11,9 +11,9 @@ import 'package:geeruh/theme.dart';
 
 JsonToTypeConverter _converter = JsonToTypeConverter(
   typeToMap: {
-    HelloWorldRes: (json) => HelloWorldRes.fromJson(json),
     IssueRes: (json) => IssueRes.fromJson(json),
     RegisterRes: (json) => RegisterRes.fromJson(json),
+    StatusRes: (json) => StatusRes.fromJson(json),
   },
 );
 
