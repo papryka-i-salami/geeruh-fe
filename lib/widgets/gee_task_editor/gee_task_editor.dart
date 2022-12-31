@@ -44,7 +44,7 @@ class _GeeTaskEditorState extends StateWithLifecycle<GeeTaskEditor> {
           Row(
             children: [
               Text(
-                "${widget.item.issue.type} -",
+                "${widget.item.issue.type}: ",
                 style: GeeTextStyles.heading1.copyWith(color: GeeColors.gray2),
               ),
               Expanded(
@@ -53,6 +53,7 @@ class _GeeTaskEditorState extends StateWithLifecycle<GeeTaskEditor> {
                     _taskEditorStore.summary = newString;
                   },
                   initialValue: widget.item.issue.summary,
+                  decoration: InputDecoration.collapsed(hintText: "Title"),
                   style:
                       GeeTextStyles.heading1.copyWith(color: GeeColors.gray2),
                 ),

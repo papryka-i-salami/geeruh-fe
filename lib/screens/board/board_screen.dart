@@ -69,9 +69,23 @@ class _BoardScreenState extends StateWithLifecycle<BoardScreen> {
         controllers.last.add(element);
       });
     }
-    return Row(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Expanded(
+        Padding(
+          padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+          child: geeUniversalButton(100, 60, () {
+            GeePopup(context,
+                    content: GeeTaskEditor(
+                        item: RichTextItem(
+                            issue: IssueRes(
+                                issueId: "", statusCode: "OPEN", type: "TASK"),
+                            priority: Priority.medium),
+                        boardStore: boardStore))
+                .show();
+          }, "Create task", 90),
+        ),
+        Flexible(
           child: Container(
             margin: const EdgeInsets.all(20),
             decoration: BoxDecoration(
@@ -83,24 +97,6 @@ class _BoardScreenState extends StateWithLifecycle<BoardScreen> {
               groups: groups,
               boardStore: boardStore,
             ),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(top: 10, bottom: 0, right: 10),
-          child: Align(
-            alignment: Alignment.topCenter,
-            child: geeUniversalButton(100, 100, () {
-              GeePopup(context,
-                      content: GeeTaskEditor(
-                          item: RichTextItem(
-                              issue: IssueRes(
-                                  issueId: "",
-                                  statusCode: "OPEN",
-                                  type: "TASK"),
-                              priority: Priority.medium),
-                          boardStore: boardStore))
-                  .show();
-            }, "Create", 90),
           ),
         ),
       ],

@@ -5,7 +5,7 @@ Widget geeUniversalButton(
   double width,
   double heigth,
   Function onPressed, [
-  String caption = 'Button',
+  String caption = "",
   double borderRadius = 5,
 ]) {
   return ElevatedButton(
