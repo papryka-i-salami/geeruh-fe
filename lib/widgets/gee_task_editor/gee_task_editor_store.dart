@@ -55,4 +55,26 @@ abstract class _GeeTaskEditorStore with Store {
       await boardStoreToGet!.getIssues(navigatorKey.currentContext!);
     }
   }
+
+  @observable
+  ObservableFuture futurePostIssue = ObservableFuture.value(null);
+
+  @action
+  Future postIssue(BuildContext context) {
+    return futurePostIssue = ObservableFuture(_postIssue(context));
+  }
+
+  Future _postIssue(BuildContext context) async {
+    final response = await apiRequest(
+        _api.postIssue(
+            PutIssueReq(
+                type: type!, summary: summary, description: description),
+            "PIS",
+            "INP"),
+        context);
+    if (response.isSuccessful) {
+      Navigator.pop(navigatorKey.currentContext!);
+      await boardStoreToGet!.getIssues(navigatorKey.currentContext!);
+    }
+  }
 }

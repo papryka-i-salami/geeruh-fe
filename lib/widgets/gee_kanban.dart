@@ -18,21 +18,33 @@ class GeeKanban extends StatefulWidget {
 }
 
 class _GeeKanbanState extends State<GeeKanban> {
-  final AppFlowyBoardController controller = AppFlowyBoardController(
-    // DO NOT REMOVE
-    onMoveGroup: (fromGroupId, fromIndex, toGroupId, toIndex) {},
-    onMoveGroupItem: (groupId, fromIndex, toIndex) {},
-    onMoveGroupItemToGroup: (fromGroupId, fromIndex, toGroupId, toIndex) {},
-  );
+  late AppFlowyBoardController controller;
 
   late AppFlowyBoardScrollController boardController;
 
   @override
   void initState() {
     boardController = AppFlowyBoardScrollController();
+    controller = AppFlowyBoardController(
+      // DO NOT REMOVE
+      onMoveGroup: (fromGroupId, fromIndex, toGroupId, toIndex) {},
+      onMoveGroupItem: (groupId, fromIndex, toIndex) {},
+      onMoveGroupItemToGroup: (fromGroupId, fromIndex, toGroupId, toIndex) {
+        // TODO when moved between groups it resets order (because of getIssues)
+        var fromGroup =
+            widget.groups.firstWhere((group) => group.id == fromGroupId);
 
+        var toGroup =
+            widget.groups.firstWhere((group) => group.id == toGroupId);
+
+        String issueId = toGroup.items.isNotEmpty
+            ? toGroup.items.elementAt(toIndex).id
+            : fromGroup.items.elementAt(fromIndex).id;
+        widget.boardStore.updateIssueStatus(context, issueId, toGroupId);
+        widget.boardStore.getIssues(context);
+      },
+    );
     controller.addGroups(widget.groups);
-
     super.initState();
   }
 
@@ -46,65 +58,73 @@ class _GeeKanbanState extends State<GeeKanban> {
     return ClipRRect(
       borderRadius: BorderRadius.circular(16.0),
       child: AppFlowyBoard(
-          controller: controller,
-          cardBuilder: (context, group, groupItem) => AppFlowyGroupCard(
-                key: ValueKey(groupItem.id),
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: GeeColors.gray1),
-                    color: GeeColors.white),
-                child: buildCard(groupItem, widget.boardStore),
-              ),
-          boardScrollController: boardController,
-          // // DO NOT REMOVE
-          // footerBuilder: (context, columnData) => AppFlowyGroupFooter(
-          //       icon: const Icon(Icons.add, size: 20),
-          //       title: const Text('New'),
-          //       height: 50,
-          //       margin: config.groupItemPadding,
-          //       onAddButtonClick: () {
-          //         boardController.scrollToBottom(columnData.id);
-          //       },
-          //     ),
-          headerBuilder: (context, columnData) => Container(
-                decoration: BoxDecoration(
-                    color: GeeColors.gray10,
-                    border: Border(
-                        bottom: BorderSide(
-                            color: _colorFromId(columnData.id), width: 3))),
-                child: AppFlowyGroupHeader(
-                  title: SizedBox(
-                    width: 200,
-                    child: Text(
-                      columnData.headerData.groupName,
-                      style: GeeTextStyles.heading5
-                          .copyWith(color: _colorFromId(columnData.id)),
-                    ),
+        controller: controller,
+        cardBuilder: (context, group, groupItem) => AppFlowyGroupCard(
+          key: ValueKey(groupItem.id),
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: GeeColors.gray1),
+              color: GeeColors.white),
+          child: buildCard(groupItem, widget.boardStore),
+        ),
+        boardScrollController: boardController,
+        // // DO NOT REMOVE
+        // footerBuilder: (context, columnData) => AppFlowyGroupFooter(
+        //       icon: const Icon(Icons.add, size: 20),
+        //       title: const Text('New'),
+        //       height: 50,
+        //       margin: config.groupItemPadding,
+        //       onAddButtonClick: () {
+        //         boardController.scrollToBottom(columnData.id);
+        //       },
+        //     ),
+        headerBuilder: (context, columnData) => Container(
+          decoration: BoxDecoration(
+              color: GeeColors.gray10,
+              border: Border(
+                  bottom: BorderSide(
+                      color: _colorFromId(
+                        columnData.id,
+                      ),
+                      width: 3))),
+          child: AppFlowyGroupHeader(
+            title: SizedBox(
+              child: Text(
+                columnData.headerData.groupName,
+                overflow: TextOverflow.clip,
+                style: GeeTextStyles.heading5.copyWith(
+                  color: _colorFromId(
+                    columnData.id,
                   ),
-                  height: 50,
-                  margin: config.groupItemPadding,
                 ),
               ),
-          groupConstraints: BoxConstraints.tightFor(
-              width: MediaQuery.of(context).size.width / 5.2),
-          config: config),
+            ),
+            height: 50,
+            margin: config.groupItemPadding,
+          ),
+        ),
+        groupConstraints: BoxConstraints.tightFor(
+            width: MediaQuery.of(context).size.width /
+                (widget.groups.length + 0.05 * widget.groups.length)),
+        config: config,
+      ),
     );
   }
-}
 
-Color _colorFromId(String id) {
-  switch (id) {
-    case "Backlog":
-      return GeeColors.secondary1;
-    case "Selected For Development":
-      return GeeColors.secondary2;
-    case "In progress":
-      return GeeColors.secondary3;
-    case "Awaiting review":
-      return GeeColors.secondary4;
-    case "Done":
-      return GeeColors.secondary5;
-    default:
-      return GeeColors.secondary1;
+  Color _colorFromId(String id) {
+    var orderNumber = widget.boardStore.statuses
+        .firstWhere((status) => status.code == id)
+        .orderNumber;
+
+    switch (orderNumber) {
+      case 1:
+        return GeeColors.secondary1;
+      case 2:
+        return GeeColors.secondary3;
+      case 3:
+        return GeeColors.secondary5;
+      default:
+        return GeeColors.secondary1;
+    }
   }
 }
