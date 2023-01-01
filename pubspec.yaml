@@ -48,6 +48,7 @@ dependencies:
   appflowy_board: ^0.0.9
   desktop_window: ^0.4.0
   functional_widget: ^0.10.1
+  http: ^0.13.5
 
 dev_dependencies:
   flutter_test:
