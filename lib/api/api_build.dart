@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:chopper/chopper.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:geeruh/api/api_classes.dart';
 import 'package:geeruh/cookies/cookie_store.dart';
@@ -9,12 +10,15 @@ import 'package:geeruh/global_constants.dart';
 import 'package:geeruh/main.dart';
 import 'package:geeruh/theme.dart';
 
+import 'http_client.dart' if (dart.library.html) 'http_client_web.dart'
+    as custom_http_client;
+
 JsonToTypeConverter _converter = JsonToTypeConverter(
   typeToMap: {
-    HelloWorldRes: (json) => HelloWorldRes.fromJson(json),
     IssueRes: (json) => IssueRes.fromJson(json),
     ProjectRes: (json) => ProjectRes.fromJson(json),
     RegisterRes: (json) => RegisterRes.fromJson(json),
+    StatusRes: (json) => StatusRes.fromJson(json),
   },
 );
 
@@ -55,6 +59,7 @@ class CookieInterceptor extends RequestInterceptor {
 
   @override
   FutureOr<Request> onRequest(Request request) async {
+    if (kIsWeb) return request;
     String cookieValue = _cookieStore.cookieValue;
 
     return request.copyWith(
@@ -69,6 +74,7 @@ class CookieInterceptor extends RequestInterceptor {
 ChopperClient initChopperClient(CookieStore cookieStore) => ChopperClient(
     baseUrl: Uri.parse(ConstantDev.hostAddress),
     converter: _converter,
+    client: custom_http_client.getHttpClient(),
     interceptors: [CookieInterceptor(cookieStore)]);
 
 Future<Response<T?>> apiRequest<T>(

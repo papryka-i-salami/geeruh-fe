@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:geeruh/api/api_build.dart';
 import 'package:geeruh/api/api_classes.dart';
@@ -38,15 +39,17 @@ abstract class _LoginStore with Store {
     final response = await apiRequest(
         _api.login(LoginReq(username: login, password: password)), context);
     if (response.isSuccessful) {
-      Map<String, String> loginResponse = response.headers;
-      String sessionId = loginResponse["set-cookie"] == null
-          ? _cookieStore.cookieValue
-          : loginResponse["set-cookie"]!.split(';')[0];
+      if (!kIsWeb) {
+        Map<String, String> loginResponse = response.headers;
+        String sessionId = loginResponse["set-cookie"] == null
+            ? _cookieStore.cookieValue
+            : loginResponse["set-cookie"]!.split(';')[0];
 
-      login = "";
-      password = "";
+        login = "";
+        password = "";
 
-      _cookieStore.setCookieValue(sessionId);
+        _cookieStore.setCookieValue(sessionId);
+      }
       Navigator.pushNamed(
           navigatorKey.currentContext!, ConstantScreens.startScreen);
     }

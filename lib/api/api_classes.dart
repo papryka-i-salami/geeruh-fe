@@ -3,18 +3,6 @@ import 'package:json_annotation/json_annotation.dart';
 part 'api_classes.g.dart';
 
 @JsonSerializable()
-class HelloWorldRes {
-  String hello;
-
-  HelloWorldRes(this.hello);
-
-  factory HelloWorldRes.fromJson(Map<String, dynamic> json) =>
-      _$HelloWorldResFromJson(json);
-
-  Map<String, dynamic> toJson() => _$HelloWorldResToJson(this);
-}
-
-@JsonSerializable()
 class IssueRes {
   String issueId;
   String statusCode;
@@ -149,4 +137,31 @@ class PostProjectReq {
       _$PostProjectReqFromJson(json);
 
   Map<String, dynamic> toJson() => _$PostProjectReqToJson(this);
+}
+
+@JsonSerializable()
+class StatusRes {
+  String code;
+  String name;
+  int orderNumber;
+
+  StatusRes(
+      {required this.code, required this.name, required this.orderNumber});
+
+  factory StatusRes.fromJson(Map<String, dynamic> json) =>
+      _$StatusResFromJson(json);
+
+  Map<String, dynamic> toJson() => _$StatusResToJson(this);
+}
+
+@JsonSerializable()
+class ChangeIssueStatusReq {
+  String statusCode;
+
+  ChangeIssueStatusReq({required this.statusCode});
+
+  factory ChangeIssueStatusReq.fromJson(Map<String, dynamic> json) =>
+      _$ChangeIssueStatusReqFromJson(json);
+
+  Map<String, dynamic> toJson() => _$ChangeIssueStatusReqToJson(this);
 }

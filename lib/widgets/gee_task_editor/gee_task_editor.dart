@@ -8,8 +8,11 @@ import 'package:geeruh/widgets/gee_task_editor/gee_task_editor_store.dart';
 import 'package:geeruh/widgets/gee_universal_button.dart';
 
 class GeeTaskEditor extends StatefulWidget {
-  const GeeTaskEditor(
-      {super.key, required this.item, required this.boardStore});
+  const GeeTaskEditor({
+    super.key,
+    required this.item,
+    required this.boardStore,
+  });
 
   final RichTextItem item;
   final BoardStore boardStore;
@@ -41,7 +44,7 @@ class _GeeTaskEditorState extends StateWithLifecycle<GeeTaskEditor> {
           Row(
             children: [
               Text(
-                "${widget.item.issue.type} -",
+                "${widget.item.issue.type}: ",
                 style: GeeTextStyles.heading1.copyWith(color: GeeColors.gray2),
               ),
               Expanded(
@@ -50,6 +53,7 @@ class _GeeTaskEditorState extends StateWithLifecycle<GeeTaskEditor> {
                     _taskEditorStore.summary = newString;
                   },
                   initialValue: widget.item.issue.summary,
+                  decoration: InputDecoration.collapsed(hintText: "Title"),
                   style:
                       GeeTextStyles.heading1.copyWith(color: GeeColors.gray2),
                 ),
@@ -126,7 +130,7 @@ class _GeeTaskEditorState extends StateWithLifecycle<GeeTaskEditor> {
           style: GeeTextStyles.heading2.copyWith(color: GeeColors.secondary1),
         ),
         const SizedBox(height: 10),
-        Flexible(
+        Expanded(
           child: SingleChildScrollView(
             child: Column(
               children: [
@@ -137,7 +141,7 @@ class _GeeTaskEditorState extends StateWithLifecycle<GeeTaskEditor> {
                   keyboardType: TextInputType.multiline,
                   maxLines: null,
                   initialValue: widget.item.issue.description,
-                  style: GeeTextStyles.paragraph3,
+                  style: GeeTextStyles.paragraph2,
                   textAlign: TextAlign.justify,
                 ),
               ],
@@ -215,8 +219,12 @@ class _GeeTaskEditorState extends StateWithLifecycle<GeeTaskEditor> {
                     _taskContributor("Ingmar Jensen")
                   ],
                 ),
-                const SizedBox(height: 150),
-                _approveButton(),
+                Expanded(
+                  child: Align(
+                    alignment: Alignment.bottomCenter,
+                    child: _approveButton(),
+                  ),
+                ),
               ],
             ),
           ),
@@ -251,8 +259,9 @@ class _GeeTaskEditorState extends StateWithLifecycle<GeeTaskEditor> {
 
   Widget _approveButton() {
     return geeUniversalButton(200, 100, () async {
-      await _taskEditorStore.updateIssue(context, widget.item.id);
-      // await widget.boardStore.getIssues(navigatorKey.currentContext!);
+      widget.item.id == ""
+          ? await _taskEditorStore.postIssue(context)
+          : await _taskEditorStore.updateIssue(context, widget.item.id);
       setState(() {});
     }, "Approve");
   }
