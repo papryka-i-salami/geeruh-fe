@@ -9,13 +9,16 @@ class IssueRes {
   String type;
   String? summary;
   String? description;
+  String? assigneeUserId;
 
-  IssueRes(
-      {required this.issueId,
-      required this.statusCode,
-      required this.type,
-      this.summary,
-      this.description});
+  IssueRes({
+    required this.issueId,
+    required this.statusCode,
+    required this.type,
+    this.summary,
+    this.description,
+    this.assigneeUserId,
+  });
 
   factory IssueRes.fromJson(Map<String, dynamic> json) =>
       _$IssueResFromJson(json);
@@ -164,4 +167,39 @@ class ChangeIssueStatusReq {
       _$ChangeIssueStatusReqFromJson(json);
 
   Map<String, dynamic> toJson() => _$ChangeIssueStatusReqToJson(this);
+}
+
+@JsonSerializable()
+class UpdateIssueAssigneeReq {
+  String assigneeUserId;
+
+  UpdateIssueAssigneeReq({required this.assigneeUserId});
+
+  factory UpdateIssueAssigneeReq.fromJson(Map<String, dynamic> json) =>
+      _$UpdateIssueAssigneeReqFromJson(json);
+
+  Map<String, dynamic> toJson() => _$UpdateIssueAssigneeReqToJson(this);
+}
+
+@JsonSerializable()
+class UserRes {
+  String userId;
+  String login;
+  String email;
+  String firstName;
+  String? secondName;
+  String surname;
+  UserRes({
+    required this.userId,
+    required this.login,
+    required this.email,
+    required this.firstName,
+    this.secondName,
+    required this.surname,
+  });
+
+  factory UserRes.fromJson(Map<String, dynamic> json) =>
+      _$UserResFromJson(json);
+
+  Map<String, dynamic> toJson() => _$UserResToJson(this);
 }

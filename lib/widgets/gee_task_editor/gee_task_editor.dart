@@ -5,6 +5,7 @@ import 'package:geeruh/utils/state_with_lifecycle.dart';
 import 'package:geeruh/widgets/gee_build_card.dart';
 import 'package:geeruh/widgets/gee_priority_dropdown.dart';
 import 'package:geeruh/widgets/gee_task_editor/gee_task_editor_store.dart';
+import 'package:geeruh/widgets/gee_text_dropdown.dart';
 import 'package:geeruh/widgets/gee_universal_button.dart';
 
 class GeeTaskEditor extends StatefulWidget {
@@ -53,7 +54,11 @@ class _GeeTaskEditorState extends StateWithLifecycle<GeeTaskEditor> {
                     _taskEditorStore.summary = newString;
                   },
                   initialValue: widget.item.issue.summary,
-                  decoration: InputDecoration.collapsed(hintText: "Title"),
+                  decoration: InputDecoration.collapsed(
+                    hintText: "Insert title",
+                    hintStyle:
+                        GeeTextStyles.heading2.copyWith(color: GeeColors.gray6),
+                  ),
                   style:
                       GeeTextStyles.heading1.copyWith(color: GeeColors.gray2),
                 ),
@@ -80,16 +85,19 @@ class _GeeTaskEditorState extends StateWithLifecycle<GeeTaskEditor> {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text("Parent"),
-                          //TODO dropdown with parent task
-                          Container(
-                            height: 40,
-                            width: 250,
-                            decoration: BoxDecoration(
-                                color: GeeColors.white,
-                                border: Border.all(
-                                    color: GeeColors.gray1, width: 1)),
-                          )
+                          if (widget.item.issue.issueId != "")
+                            GeeTextDropdown(
+                              items:
+                                  widget.boardStore.getIssueIdsWithEmptyOne(),
+                              initialValue:
+                                  widget.item.issue.assigneeUserId != null
+                                      ? widget.boardStore.getUserNameAndSurname(
+                                          widget.item.issue.assigneeUserId!)
+                                      : "Empty",
+                              onChanged: (selectedPerson) {
+                                widget.boardStore.setAssignee(selectedPerson);
+                              },
+                            ),
                         ],
                       ),
                     ],
@@ -193,30 +201,24 @@ class _GeeTaskEditorState extends StateWithLifecycle<GeeTaskEditor> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Text(
-                  "Assignor",
-                  style: GeeTextStyles.heading2
-                      .copyWith(color: GeeColors.secondary1),
-                ),
-                const SizedBox(height: 10),
-                Column(
-                  //TODO remove example and comment
-                  //Insert individual task contributor (JUST ONE) like this:
-                  children: [_taskContributor("Alan Baker")],
-                ),
-                const SizedBox(height: 10),
-                Text(
-                  "Assignees",
+                  "Assignee",
                   style: GeeTextStyles.heading2
                       .copyWith(color: GeeColors.secondary1),
                 ),
                 Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    //TODO remove example and comment
-                    //Insert individual task contributor (JUST ONE) like this:
-                    _taskContributor("Crystal Dyson"),
-                    _taskContributor("Ekaterina Fritz"),
-                    _taskContributor("Gary Haywood"),
-                    _taskContributor("Ingmar Jensen")
+                    if (widget.item.issue.issueId != "")
+                      GeeTextDropdown(
+                        items: widget.boardStore.getUsersNamesWithEmptyOne(),
+                        initialValue: widget.item.issue.assigneeUserId != null
+                            ? widget.boardStore.getUserNameAndSurname(
+                                widget.item.issue.assigneeUserId!)
+                            : "Empty",
+                        onChanged: (selectedPerson) {
+                          widget.boardStore.setAssignee(selectedPerson);
+                        },
+                      ),
                   ],
                 ),
                 Expanded(
@@ -233,36 +235,17 @@ class _GeeTaskEditorState extends StateWithLifecycle<GeeTaskEditor> {
     );
   }
 
-  Widget _taskContributor(String name) {
-    return Padding(
-      padding: const EdgeInsets.all(10),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          // TODO custom avatars
-          Container(
-            width: 20,
-            height: 20,
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
-                color: GeeColors.primary1),
-          ),
-          const SizedBox(width: 10),
-          Text(
-            name,
-            style: GeeTextStyles.paragraph1,
-          ),
-        ],
-      ),
-    );
-  }
-
   Widget _approveButton() {
+    String userId = "";
     return geeUniversalButton(200, 100, () async {
       widget.item.id == ""
           ? await _taskEditorStore.postIssue(context)
-          : await _taskEditorStore.updateIssue(context, widget.item.id);
-      setState(() {});
+          : {
+              userId =
+                  widget.boardStore.getUserIdByName(widget.boardStore.assignee),
+              await _taskEditorStore.updateIssue(
+                  context, widget.item.id, userId)
+            };
     }, "Approve");
   }
 }

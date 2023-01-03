@@ -20,8 +20,9 @@ abstract class _BoardStore with Store {
         <String, dynamic>{}) as Map;
     projectCode = arguments['projectCode'];
 
-    await getStatuses(navigatorKey.currentContext!);
+    await getStatuses(context);
     await getIssues(navigatorKey.currentContext!);
+    await getUsers(navigatorKey.currentContext!);
   }
 
   @observable
@@ -31,7 +32,18 @@ abstract class _BoardStore with Store {
   ObservableList<StatusRes> statuses = ObservableList.of([]);
 
   @observable
+  ObservableList<UserRes> users = ObservableList.of([]);
+
+  @observable
   ObservableFuture futureGetIssues = ObservableFuture.value(null);
+
+  @observable
+  String assignee = "";
+
+  @action
+  void setAssignee(String newAssignee) {
+    assignee = newAssignee;
+  }
 
   @action
   Future getIssues(BuildContext context) {
@@ -68,6 +80,56 @@ abstract class _BoardStore with Store {
   }
 
   @observable
+  ObservableFuture futureGetUsers = ObservableFuture.value(null);
+
+  @action
+  Future getUsers(BuildContext context) {
+    return futureGetUsers = ObservableFuture(_getUsers(context));
+  }
+
+  Future _getUsers(BuildContext context) async {
+    final response = await apiRequest(_api.getUsers(), context);
+    if (response.isSuccessful) {
+      users = ObservableList.of(response.body!);
+    }
+  }
+
+  UserRes getUserById(String userId) {
+    return users.firstWhere((user) => user.userId == userId);
+  }
+
+  String getUserNameAndSurname(String userId) {
+    UserRes user = getUserById(userId);
+    return "${user.firstName} ${user.surname}";
+  }
+
+  List<String> getUsersNamesWithEmptyOne() {
+    List<String> usersNames =
+        users.map((user) => getUserNameAndSurname(user.userId)).toList();
+    usersNames.add("Empty");
+    return usersNames;
+  }
+
+  List<String> getIssueIdsWithEmptyOne() {
+    List<String> issuesIds = issues.map((issue) => issue.issueId).toList();
+    issuesIds.add("Empty");
+    return issuesIds;
+  }
+
+  String getUserIdByName(String userName) {
+    if (userName == "Empty") {
+      return "";
+    } else {
+      List<String> userNewName = userName.split(" ");
+      return users
+          .firstWhere((user) =>
+              user.firstName == userNewName[0] &&
+              user.surname == userNewName[1])
+          .userId;
+    }
+  }
+
+  @observable
   ObservableFuture futureUpdateIssueStatus = ObservableFuture.value(null);
 
   @action
@@ -79,14 +141,11 @@ abstract class _BoardStore with Store {
 
   Future _updateIssueStatus(
       BuildContext context, String issueId, String newStatusCode) async {
-    final response = await apiRequest(
+    await apiRequest(
         _api.updateIssueStatus(
           issueId,
           ChangeIssueStatusReq(statusCode: newStatusCode),
         ),
         context);
-    if (response.isSuccessful) {
-      print("successful");
-    }
   }
 }

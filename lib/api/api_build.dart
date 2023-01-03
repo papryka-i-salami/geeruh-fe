@@ -19,6 +19,7 @@ JsonToTypeConverter _converter = JsonToTypeConverter(
     ProjectRes: (json) => ProjectRes.fromJson(json),
     RegisterRes: (json) => RegisterRes.fromJson(json),
     StatusRes: (json) => StatusRes.fromJson(json),
+    UserRes: (json) => UserRes.fromJson(json),
   },
 );
 

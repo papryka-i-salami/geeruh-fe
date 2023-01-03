@@ -50,6 +50,8 @@ class _GeeKanbanState extends State<GeeKanban> {
 
   @override
   Widget build(BuildContext context) {
+    controller.clear();
+    controller.addGroups(widget.groups);
     final config = AppFlowyBoardConfig(
       groupPadding: const EdgeInsets.symmetric(horizontal: 0.5),
       groupBackgroundColor: GeeColors.gray9,

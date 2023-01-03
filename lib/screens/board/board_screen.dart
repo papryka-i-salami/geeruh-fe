@@ -4,6 +4,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:geeruh/api/api_classes.dart';
 import 'package:geeruh/screens/board/board_store.dart';
 import 'package:geeruh/theme.dart';
+import 'package:geeruh/utils/combine_statuses.dart';
 import 'package:geeruh/utils/state_with_lifecycle.dart';
 import 'package:geeruh/widgets/gee_build_card.dart';
 import 'package:geeruh/widgets/gee_future_child.dart';
@@ -40,7 +41,13 @@ class _BoardScreenState extends StateWithLifecycle<BoardScreen> {
         body: Observer(
           builder: (_) => GeeFutureChild(
             loaded: _loaded,
-            status: boardStore.futureGetIssues.status,
+            status: combineStatuses(
+              [
+                boardStore.futureGetStatuses.status,
+                boardStore.futureGetIssues.status,
+                boardStore.futureGetUsers.status,
+              ],
+            ),
           ),
         ),
       ),
