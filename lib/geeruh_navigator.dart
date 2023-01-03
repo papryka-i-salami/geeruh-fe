@@ -6,7 +6,8 @@ import 'package:geeruh/screens/login/login_screen.dart';
 import 'package:geeruh/screens/register/register_screen.dart';
 import 'package:geeruh/screens/start/start_screen.dart';
 
-Route geeruhPageRoute(BuildContext context, String screen) {
+Route geeruhPageRoute(
+    BuildContext context, String screen, RouteSettings settings) {
   switch (screen) {
     case ConstantScreens.devScreen:
       return MaterialPageRoute(builder: (_) => const DevScreen());
@@ -26,6 +27,7 @@ Route geeruhPageRoute(BuildContext context, String screen) {
     case ConstantScreens.boardScreen:
       return MaterialPageRoute(
         builder: (_) => const BoardScreen(),
+        settings: settings,
       );
 
     case ConstantScreens.registerScreen:

@@ -24,6 +24,20 @@ class IssueRes {
 }
 
 @JsonSerializable()
+class ProjectRes {
+  String code;
+  String name;
+  String? description;
+
+  ProjectRes({required this.code, required this.name, this.description});
+
+  factory ProjectRes.fromJson(Map<String, dynamic> json) =>
+      _$ProjectResFromJson(json);
+
+  Map<String, dynamic> toJson() => _$ProjectResToJson(this);
+}
+
+@JsonSerializable()
 class LoginReq {
   String username;
   String password;
@@ -96,6 +110,33 @@ class PutIssueReq {
       _$PutIssueReqFromJson(json);
 
   Map<String, dynamic> toJson() => _$PutIssueReqToJson(this);
+}
+
+@JsonSerializable()
+class PutProjectReq {
+  String code;
+  String? name;
+  String? description;
+
+  PutProjectReq({required this.code, this.name, this.description});
+
+  factory PutProjectReq.fromJson(Map<String, dynamic> json) =>
+      _$PutProjectReqFromJson(json);
+
+  Map<String, dynamic> toJson() => _$PutProjectReqToJson(this);
+}
+
+@JsonSerializable()
+class PostProjectReq {
+  String? name;
+  String? description;
+
+  PostProjectReq({this.name, this.description});
+
+  factory PostProjectReq.fromJson(Map<String, dynamic> json) =>
+      _$PostProjectReqFromJson(json);
+
+  Map<String, dynamic> toJson() => _$PostProjectReqToJson(this);
 }
 
 @JsonSerializable()

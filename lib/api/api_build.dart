@@ -16,6 +16,7 @@ import 'http_client.dart' if (dart.library.html) 'http_client_web.dart'
 JsonToTypeConverter _converter = JsonToTypeConverter(
   typeToMap: {
     IssueRes: (json) => IssueRes.fromJson(json),
+    ProjectRes: (json) => ProjectRes.fromJson(json),
     RegisterRes: (json) => RegisterRes.fromJson(json),
     StatusRes: (json) => StatusRes.fromJson(json),
   },
