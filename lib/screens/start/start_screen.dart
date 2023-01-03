@@ -52,12 +52,11 @@ class _StartScreenState extends StateWithLifecycle<StartScreen> {
                   const SizedBox(height: 30),
                   Center(
                     child: geeUniversalButton(250, 70, () async {
-                      await GeePopup(context,
-                              content: GeeProjectEditor(
-                                  width: 700,
-                                  heigth: 700,
-                                  startStore: _startStore))
-                          .show();
+                      await GeePopup(
+                        context,
+                        content: GeeProjectEditor(
+                            width: 700, heigth: 700, startStore: _startStore),
+                      ).show();
                     }, "Add project"),
                   ),
                 ],
