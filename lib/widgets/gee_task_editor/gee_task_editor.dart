@@ -223,6 +223,7 @@ class _GeeTaskEditorState extends StateWithLifecycle<GeeTaskEditor> {
                       ),
                       Column(
                         mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           if (currentIssue.issueId != "")
                             GeeTextDropdown(
@@ -238,8 +239,9 @@ class _GeeTaskEditorState extends StateWithLifecycle<GeeTaskEditor> {
                             ),
                         ],
                       ),
+                      const SizedBox(height: 15),
                       Text(
-                        "Parent issues:",
+                        "Parent tasks:",
                         style: GeeTextStyles.heading2
                             .copyWith(color: GeeColors.secondary1),
                       ),
@@ -323,21 +325,14 @@ class _GeeTaskEditorState extends StateWithLifecycle<GeeTaskEditor> {
                   initialValue: "Empty",
                   onChanged: (selectedParentIssue) {
                     _taskEditorStore.selectParentIssue(selectedParentIssue);
+                    if (_taskEditorStore.selectedParentIssue != "" &&
+                        _taskEditorStore.selectedParentIssue != "Empty") {
+                      _taskEditorStore.makeIssueRelation(
+                          context,
+                          currentIssue.issueId,
+                          _taskEditorStore.selectedParentIssue);
+                    }
                   },
-                ),
-                Observer(
-                  builder: (_) => Padding(
-                    padding: const EdgeInsets.only(left: 10),
-                    child: (_taskEditorStore.selectedParentIssue == "" ||
-                            _taskEditorStore.selectedParentIssue == "Empty")
-                        ? Row()
-                        : geeUniversalButton(50, 50, () {
-                            _taskEditorStore.makeIssueRelation(
-                                context,
-                                currentIssue.issueId,
-                                _taskEditorStore.selectedParentIssue);
-                          }, "Add"),
-                  ),
                 ),
               ],
             ),

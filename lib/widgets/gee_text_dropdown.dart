@@ -4,7 +4,7 @@ import 'package:geeruh/theme.dart';
 class GeeTextDropdown extends StatefulWidget {
   const GeeTextDropdown(
       {super.key,
-      this.width = 180,
+      this.width = 270,
       this.heigth = 40,
       required this.items,
       required this.initialValue,
@@ -21,10 +21,7 @@ class GeeTextDropdown extends StatefulWidget {
 }
 
 class _GeeTextDropdown extends State<GeeTextDropdown> {
-  double get width => widget.width;
-  double get heigth => widget.heigth;
-  String get initialValue => widget.initialValue;
-  String currentValue = "Empty";
+  String? currentValue;
 
   void onChanged(String? value) {
     setState(() {
@@ -35,15 +32,19 @@ class _GeeTextDropdown extends State<GeeTextDropdown> {
 
   @override
   void initState() {
-    currentValue = initialValue;
+    currentValue = widget.initialValue;
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: width,
-      height: heigth,
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(width: 2, color: GeeColors.secondary3),
+      ),
+      width: widget.width,
+      height: widget.heigth,
       child: DropdownButtonHideUnderline(
         child: DropdownButton<String>(
           isExpanded: true,
@@ -57,10 +58,17 @@ class _GeeTextDropdown extends State<GeeTextDropdown> {
             return DropdownMenuItem<String>(
               value: value,
               child: SizedBox(
-                height: heigth - 10,
-                child: Text(value,
-                    style: GeeTextStyles.heading5
-                        .copyWith(color: GeeColors.gray2)),
+                height: widget.heigth - 10,
+                child: Center(
+                  child: Text(
+                    value,
+                    style: GeeTextStyles.heading5.copyWith(
+                        color: value == "Empty"
+                            ? GeeColors.gray6
+                            : GeeColors.gray2),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
               ),
             );
           }).toList(),
