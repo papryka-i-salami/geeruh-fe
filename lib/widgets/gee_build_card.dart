@@ -109,6 +109,7 @@ class _GeeBuildCardState extends State<_GeeBuildCard> {
           onTap: () async {
             await GeePopup(context,
                 content: GeeTaskEditor(
+                  key: widget.key,
                   item: item,
                   boardStore: widget.boardStore,
                 )).show();

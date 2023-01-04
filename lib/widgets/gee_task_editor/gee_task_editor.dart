@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:geeruh/api/api_classes.dart';
 import 'package:geeruh/screens/board/board_store.dart';
 import 'package:geeruh/theme.dart';
+import 'package:geeruh/utils/combine_statuses.dart';
 import 'package:geeruh/utils/state_with_lifecycle.dart';
 import 'package:geeruh/widgets/gee_build_card.dart';
+import 'package:geeruh/widgets/gee_future_child.dart';
 import 'package:geeruh/widgets/gee_priority_dropdown.dart';
 import 'package:geeruh/widgets/gee_task_editor/gee_task_editor_store.dart';
+import 'package:geeruh/widgets/gee_text_dropdown.dart';
 import 'package:geeruh/widgets/gee_universal_button.dart';
 
 class GeeTaskEditor extends StatefulWidget {
@@ -31,6 +36,10 @@ class _GeeTaskEditorState extends StateWithLifecycle<GeeTaskEditor> {
 
   @override
   Widget build(BuildContext context) {
+    // TODO allow new task to be created
+    IssueRes currentIssue = widget.item.issue.issueId == ""
+        ? widget.item.issue
+        : widget.boardStore.getIssueById(widget.item.issue.issueId);
     double popupWidth = MediaQuery.of(context).size.width * 0.9;
     double popupHeight = MediaQuery.of(context).size.height * 0.8;
     return Container(
@@ -44,7 +53,7 @@ class _GeeTaskEditorState extends StateWithLifecycle<GeeTaskEditor> {
           Row(
             children: [
               Text(
-                "${widget.item.issue.type}: ",
+                "${currentIssue.type}: ",
                 style: GeeTextStyles.heading1.copyWith(color: GeeColors.gray2),
               ),
               Expanded(
@@ -52,8 +61,12 @@ class _GeeTaskEditorState extends StateWithLifecycle<GeeTaskEditor> {
                   onChanged: (newString) {
                     _taskEditorStore.summary = newString;
                   },
-                  initialValue: widget.item.issue.summary,
-                  decoration: InputDecoration.collapsed(hintText: "Title"),
+                  initialValue: currentIssue.summary,
+                  decoration: InputDecoration.collapsed(
+                    hintText: "Insert title",
+                    hintStyle:
+                        GeeTextStyles.heading2.copyWith(color: GeeColors.gray6),
+                  ),
                   style:
                       GeeTextStyles.heading1.copyWith(color: GeeColors.gray2),
                 ),
@@ -80,16 +93,12 @@ class _GeeTaskEditorState extends StateWithLifecycle<GeeTaskEditor> {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text("Parent"),
-                          //TODO dropdown with parent task
-                          Container(
-                            height: 40,
-                            width: 250,
-                            decoration: BoxDecoration(
-                                color: GeeColors.white,
-                                border: Border.all(
-                                    color: GeeColors.gray1, width: 1)),
-                          )
+                          if (currentIssue.issueId != "")
+                            Text(
+                              currentIssue.issueId,
+                              style: GeeTextStyles.heading4
+                                  .copyWith(color: GeeColors.secondary1),
+                            ),
                         ],
                       ),
                     ],
@@ -99,7 +108,8 @@ class _GeeTaskEditorState extends StateWithLifecycle<GeeTaskEditor> {
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        _taskContributors(popupWidth * 0.25),
+                        _taskContributorsAndRelatedIssues(
+                            popupWidth * 0.25, currentIssue),
                         const SizedBox(width: 15),
                         _taskActivity(popupWidth * 0.35)
                       ],
@@ -107,15 +117,16 @@ class _GeeTaskEditorState extends StateWithLifecycle<GeeTaskEditor> {
                   ),
                 ]),
                 const SizedBox(width: 15),
-                _taskDescription(
-                    widget.item.issue.description ?? "", popupWidth * 0.35),
+                _taskDescription(currentIssue.description ?? "",
+                    popupWidth * 0.35, currentIssue),
               ],
             ),
           ),
         ]));
   }
 
-  Widget _taskDescription(String description, double width) {
+  Widget _taskDescription(
+      String description, double width, IssueRes currentIssue) {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -140,7 +151,7 @@ class _GeeTaskEditorState extends StateWithLifecycle<GeeTaskEditor> {
                   },
                   keyboardType: TextInputType.multiline,
                   maxLines: null,
-                  initialValue: widget.item.issue.description,
+                  initialValue: currentIssue.description,
                   style: GeeTextStyles.paragraph2,
                   textAlign: TextAlign.justify,
                 ),
@@ -177,7 +188,8 @@ class _GeeTaskEditorState extends StateWithLifecycle<GeeTaskEditor> {
     );
   }
 
-  Widget _taskContributors(double width) {
+  Widget _taskContributorsAndRelatedIssues(
+      double width, IssueRes currentIssue) {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -189,68 +201,66 @@ class _GeeTaskEditorState extends StateWithLifecycle<GeeTaskEditor> {
       child: Row(
         children: [
           Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Text(
-                  "Assignor",
-                  style: GeeTextStyles.heading2
-                      .copyWith(color: GeeColors.secondary1),
-                ),
-                const SizedBox(height: 10),
-                Column(
-                  //TODO remove example and comment
-                  //Insert individual task contributor (JUST ONE) like this:
-                  children: [_taskContributor("Alan Baker")],
-                ),
-                const SizedBox(height: 10),
-                Text(
-                  "Assignees",
-                  style: GeeTextStyles.heading2
-                      .copyWith(color: GeeColors.secondary1),
-                ),
-                Column(
-                  children: [
-                    //TODO remove example and comment
-                    //Insert individual task contributor (JUST ONE) like this:
-                    _taskContributor("Crystal Dyson"),
-                    _taskContributor("Ekaterina Fritz"),
-                    _taskContributor("Gary Haywood"),
-                    _taskContributor("Ingmar Jensen")
-                  ],
-                ),
-                Expanded(
-                  child: Align(
-                    alignment: Alignment.bottomCenter,
-                    child: _approveButton(),
+            child: currentIssue.issueId == ""
+                ? Column(
+                    children: [
+                      Expanded(
+                        child: Align(
+                          alignment: Alignment.bottomCenter,
+                          child: _approveButton(),
+                        ),
+                      )
+                    ],
+                  )
+                : Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Assignee",
+                        style: GeeTextStyles.heading2
+                            .copyWith(color: GeeColors.secondary1),
+                      ),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          if (currentIssue.issueId != "")
+                            GeeTextDropdown(
+                              items:
+                                  widget.boardStore.getUsersNamesWithEmptyOne(),
+                              initialValue: currentIssue.assigneeUserId != null
+                                  ? widget.boardStore.getUserNameAndSurname(
+                                      currentIssue.assigneeUserId!)
+                                  : "Empty",
+                              onChanged: (selectedPerson) {
+                                widget.boardStore.setAssignee(selectedPerson);
+                              },
+                            ),
+                        ],
+                      ),
+                      const SizedBox(height: 15),
+                      Text(
+                        "Parent tasks:",
+                        style: GeeTextStyles.heading2
+                            .copyWith(color: GeeColors.secondary1),
+                      ),
+                      Observer(
+                        builder: (_) => GeeFutureChild(
+                            loaded: () => listViewWithDropdown(),
+                            status: combineStatuses([
+                              _taskEditorStore.futureMakeIssueRelation.status,
+                              widget.boardStore.futureGetIssues.status,
+                            ])),
+                      ),
+                      Expanded(
+                        child: Align(
+                          alignment: Alignment.bottomCenter,
+                          child: _approveButton(),
+                        ),
+                      ),
+                    ],
                   ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _taskContributor(String name) {
-    return Padding(
-      padding: const EdgeInsets.all(10),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          // TODO custom avatars
-          Container(
-            width: 20,
-            height: 20,
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
-                color: GeeColors.primary1),
-          ),
-          const SizedBox(width: 10),
-          Text(
-            name,
-            style: GeeTextStyles.paragraph1,
           ),
         ],
       ),
@@ -258,11 +268,77 @@ class _GeeTaskEditorState extends StateWithLifecycle<GeeTaskEditor> {
   }
 
   Widget _approveButton() {
+    String userId = "";
     return geeUniversalButton(200, 100, () async {
       widget.item.id == ""
           ? await _taskEditorStore.postIssue(context)
-          : await _taskEditorStore.updateIssue(context, widget.item.id);
-      setState(() {});
+          : {
+              userId =
+                  widget.boardStore.getUserIdByName(widget.boardStore.assignee),
+              await _taskEditorStore.updateIssue(
+                  context, widget.item.id, userId)
+            };
+      // setState(() {});
     }, "Approve");
+  }
+
+  Widget listViewWithDropdown() {
+    IssueRes currentIssue = widget.item.issue.issueId == ""
+        ? widget.item.issue
+        : widget.boardStore.getIssueById(widget.item.issue.issueId);
+    return Observer(
+      builder: (_) => Expanded(
+        child: Column(
+          children: [
+            ListView(
+              shrinkWrap: true,
+              padding: const EdgeInsets.all(8),
+              children: currentIssue.relatedIssues
+                  .map(
+                    (parentIssue) => Row(
+                      children: [
+                        Text(
+                          "\u2022 $parentIssue",
+                          style: GeeTextStyles.paragraph2
+                              .copyWith(color: GeeColors.secondary1),
+                        ),
+                        IconButton(
+                          icon: Icon(Icons.delete,
+                              size: 25, color: GeeColors.red),
+                          onPressed: () {
+                            _taskEditorStore.removeIssueRelation(
+                                context, currentIssue.issueId, parentIssue);
+                          },
+                        ),
+                      ],
+                    ),
+                  )
+                  .toList(),
+            ),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                GeeTextDropdown(
+                  items: widget.boardStore
+                      .getIssuesWithoutSelectedOnes(currentIssue),
+                  initialValue: "Empty",
+                  onChanged: (selectedParentIssue) {
+                    _taskEditorStore.selectParentIssue(selectedParentIssue);
+                    if (_taskEditorStore.selectedParentIssue != "" &&
+                        _taskEditorStore.selectedParentIssue != "Empty") {
+                      _taskEditorStore.makeIssueRelation(
+                          context,
+                          currentIssue.issueId,
+                          _taskEditorStore.selectedParentIssue);
+                    }
+                  },
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

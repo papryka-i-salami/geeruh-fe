@@ -31,6 +31,23 @@ abstract class ApiRequests extends ChopperService {
   Future<Response<IssueRes>> updateIssueStatus(
       @Path("issueId") String issueId, @Body() ChangeIssueStatusReq statusCode);
 
+  @Put(path: "/issues/{issueId}/assignee")
+  Future<Response<IssueRes>> updateIssueAssignee(
+      @Path("issueId") String issueId,
+      @Body() UpdateIssueAssigneeReq statusCode);
+
+  @Post(path: "/issues/{issueId}/related-to/{relatedIssueId}")
+  Future<Response<IssueRes>> makeIssueRelation(
+    @Path("issueId") String issueId,
+    @Path("relatedIssueId") String relatedIssueId,
+  );
+
+  @Delete(path: "/issues/{issueId}/related-to/{relatedIssueId}")
+  Future<Response<IssueRes>> removeIssueRelation(
+    @Path("issueId") String issueId,
+    @Path("relatedIssueId") String relatedIssueId,
+  );
+
 // -------------------------------------------
 
   @Get(path: "/projects")
@@ -58,4 +75,7 @@ abstract class ApiRequests extends ChopperService {
 
   @Post(path: "/users")
   Future<Response<RegisterRes>> register(@Body() RegisterReq registerBody);
+
+  @Get(path: "/users")
+  Future<Response<List<UserRes>>> getUsers();
 }

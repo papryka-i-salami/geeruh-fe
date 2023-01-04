@@ -36,22 +36,74 @@ abstract class _GeeTaskEditorStore with Store {
   BoardStore? boardStoreToGet;
 
   @observable
+  String selectedParentIssue = "";
+
+  @action
+  selectParentIssue(String newParentIssue) {
+    selectedParentIssue = newParentIssue;
+  }
+
+  @observable
   ObservableFuture futureUpdateIssue = ObservableFuture.value(null);
 
   @action
-  Future updateIssue(BuildContext context, String issueId) {
-    return futureUpdateIssue = ObservableFuture(_updateIssue(context, issueId));
+  Future updateIssue(BuildContext context, String issueId, String newAssignee) {
+    return futureUpdateIssue =
+        ObservableFuture(_updateIssue(context, issueId, newAssignee));
   }
 
-  Future _updateIssue(BuildContext context, String issueId) async {
-    final response = await apiRequest(
-        _api.updateIssue(
-            issueId,
-            PutIssueReq(
-                type: type!, summary: summary, description: description)),
+  Future _updateIssue(
+      BuildContext context, String issueId, String newAssignee) async {
+    final responseUpdateAssignee = await apiRequest(
+        _api.updateIssueAssignee(
+            issueId, UpdateIssueAssigneeReq(assigneeUserId: newAssignee)),
         context);
+
+    if (responseUpdateAssignee.isSuccessful) {
+      final response = await apiRequest(
+          _api.updateIssue(
+              issueId,
+              PutIssueReq(
+                  type: type!, summary: summary, description: description)),
+          navigatorKey.currentContext!);
+      if (response.isSuccessful) {
+        Navigator.pop(navigatorKey.currentContext!);
+        await boardStoreToGet!.getIssues(navigatorKey.currentContext!);
+      }
+    }
+  }
+
+  @observable
+  ObservableFuture futureMakeIssueRelation = ObservableFuture.value(null);
+
+  @action
+  Future makeIssueRelation(
+      BuildContext context, String issueId, String relatedIssueId) {
+    return futureMakeIssueRelation =
+        ObservableFuture(_makeIssueRelation(context, issueId, relatedIssueId));
+  }
+
+  Future _makeIssueRelation(
+      BuildContext context, String issueId, String relatedIssueId) async {
+    final response = await apiRequest(
+        _api.makeIssueRelation(issueId, relatedIssueId), context);
     if (response.isSuccessful) {
-      Navigator.pop(navigatorKey.currentContext!);
+      await boardStoreToGet!.getIssues(navigatorKey.currentContext!);
+    }
+  }
+
+  @action
+  Future removeIssueRelation(
+      BuildContext context, String issueId, String relatedIssueId) {
+    return futureMakeIssueRelation = ObservableFuture(
+        _removeIssueRelation(context, issueId, relatedIssueId));
+  }
+
+  Future _removeIssueRelation(
+      BuildContext context, String issueId, String relatedIssueId) async {
+    final response = await apiRequest(
+        _api.removeIssueRelation(issueId, relatedIssueId), context);
+    if (response.isSuccessful) {
       await boardStoreToGet!.getIssues(navigatorKey.currentContext!);
     }
   }
@@ -69,8 +121,8 @@ abstract class _GeeTaskEditorStore with Store {
         _api.postIssue(
             PutIssueReq(
                 type: type!, summary: summary, description: description),
-            "PIS",
-            "INP"),
+            boardStoreToGet!.projectCode,
+            boardStoreToGet!.statuses.first.code),
         context);
     if (response.isSuccessful) {
       Navigator.pop(navigatorKey.currentContext!);
