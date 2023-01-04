@@ -86,7 +86,11 @@ class _BoardScreenState extends StateWithLifecycle<BoardScreen> {
                     content: GeeTaskEditor(
                         item: RichTextItem(
                             issue: IssueRes(
-                                issueId: "", statusCode: "OPEN", type: "TASK"),
+                                issueId: "",
+                                statusCode: "OPEN",
+                                type: "TASK",
+                                relatedIssues: [],
+                                relatedIssuesChildren: []),
                             priority: Priority.medium),
                         boardStore: boardStore))
                 .show();

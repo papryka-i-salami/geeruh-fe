@@ -46,6 +46,7 @@ class _GeeTextDropdown extends State<GeeTextDropdown> {
       height: heigth,
       child: DropdownButtonHideUnderline(
         child: DropdownButton<String>(
+          isExpanded: true,
           value: currentValue,
           icon: const Icon(
             Icons.arrow_drop_down,

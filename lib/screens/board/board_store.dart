@@ -116,6 +116,16 @@ abstract class _BoardStore with Store {
     return issuesIds;
   }
 
+  List<String> getIssuesWithoutSelectedOnes(IssueRes currentIssue) {
+    List<String> issuesIds = issues.map((issue) => issue.issueId).toList();
+    issuesIds.removeWhere((issueId) =>
+        currentIssue.issueId == issueId ||
+        currentIssue.relatedIssues.contains(issueId) ||
+        currentIssue.relatedIssuesChildren.contains(issueId));
+    issuesIds.add("Empty");
+    return issuesIds;
+  }
+
   String getUserIdByName(String userName) {
     if (userName == "Empty") {
       return "";
@@ -127,6 +137,10 @@ abstract class _BoardStore with Store {
               user.surname == userNewName[1])
           .userId;
     }
+  }
+
+  IssueRes getIssueById(String issueId) {
+    return issues.firstWhere((issue) => issue.issueId == issueId);
   }
 
   @observable

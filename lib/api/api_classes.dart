@@ -10,6 +10,8 @@ class IssueRes {
   String? summary;
   String? description;
   String? assigneeUserId;
+  List<String> relatedIssues;
+  List<String> relatedIssuesChildren;
 
   IssueRes({
     required this.issueId,
@@ -18,6 +20,8 @@ class IssueRes {
     this.summary,
     this.description,
     this.assigneeUserId,
+    required this.relatedIssues,
+    required this.relatedIssuesChildren,
   });
 
   factory IssueRes.fromJson(Map<String, dynamic> json) =>
