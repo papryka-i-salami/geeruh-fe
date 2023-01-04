@@ -112,19 +112,20 @@ class _GeeKanbanState extends State<GeeKanban> {
   }
 
   Color _colorFromId(String id) {
-    var orderNumber = widget.boardStore.statuses
+    int orderNumber = widget.boardStore.statuses
         .firstWhere((status) => status.code == id)
         .orderNumber;
-
-    switch (orderNumber) {
-      case 1:
-        return GeeColors.secondary1;
-      case 2:
-        return GeeColors.secondary3;
-      case 3:
-        return GeeColors.secondary5;
-      default:
-        return GeeColors.secondary1;
-    }
+    int numOfStatuses = widget.boardStore.statuses.length;
+    double minSaturation = HSVColor.fromColor(GeeColors.secondary3).saturation;
+    double maxSaturation = HSVColor.fromColor(GeeColors.secondary1).saturation;
+    double saturationStep = (minSaturation - maxSaturation) / numOfStatuses;
+    double minValue = HSVColor.fromColor(GeeColors.secondary1).value;
+    double maxValue = HSVColor.fromColor(GeeColors.secondary3).value;
+    double valueStep = (maxValue - minValue) / numOfStatuses;
+    Color color = GeeColors.svModify(
+        color: GeeColors.secondary1,
+        s: maxSaturation + saturationStep * (orderNumber - 1),
+        v: minValue + valueStep * (orderNumber - 1));
+    return color;
   }
 }
