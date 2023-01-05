@@ -9,6 +9,10 @@ abstract class ApiRequests extends ChopperService {
 
   // -------------------------------------------
 
+  @Post(path: "/statuses/{statusCode}")
+  Future<Response<StatusRes>> postStatus(
+      @Path("statusCode") String statusCode, @Body() PostStatusReq statusReq);
+
   @Get(path: "/statuses")
   Future<Response<List<StatusRes>>> getStatuses();
 

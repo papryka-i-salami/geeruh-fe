@@ -6,6 +6,9 @@ import 'package:geeruh/utils/state_with_lifecycle.dart';
 import 'package:geeruh/widgets/gee_project_editor/gee_project_editor_store.dart';
 import 'package:geeruh/screens/start/start_store.dart';
 
+import 'package:geeruh/widgets/gee_future_child.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
+
 class GeeProjectEditor extends StatefulWidget {
   const GeeProjectEditor(
       {super.key,
@@ -33,10 +36,10 @@ class _GeeProjectEditorState extends StateWithLifecycle<GeeProjectEditor> {
   }
 
   bool get isNew => widget.projectRes == null;
-
   @override
   Widget build(BuildContext context) {
     return Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
         Container(
           width: widget.width,
@@ -45,99 +48,239 @@ class _GeeProjectEditorState extends StateWithLifecycle<GeeProjectEditor> {
               color: GeeColors.white,
               borderRadius: BorderRadius.circular(16),
               border: Border.all(color: GeeColors.gray1)),
-          child: Column(children: [
-            Container(
-              width: widget.width,
-              height: 50,
-              decoration: BoxDecoration(
-                  color: GeeColors.white,
-                  borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(16),
-                    topRight: Radius.circular(16),
-                    bottomLeft: Radius.zero,
-                    bottomRight: Radius.zero,
-                  ),
-                  border: Border.all(color: GeeColors.gray1)),
-              child: Center(
-                  child: Text(
-                      isNew
-                          ? "New project"
-                          : "Project code: ${widget.projectRes?.code}",
-                      style: GeeTextStyles.heading5)),
-            ),
-            const SizedBox(height: 20),
-            isNew
-                ? SizedBox(
-                    // code
-                    width: widget.width - 100,
-                    height: 70,
-                    child: TextField(
-                      onChanged: (newString) {
-                        _projectEditorStore.code = newString;
-                      },
-                      decoration: const InputDecoration(
-                        border: OutlineInputBorder(),
-                        labelText: "Project code",
-                        hintText: "Enter project code",
-                      ),
+          child: Column(
+            children: [
+              Container(
+                width: widget.width,
+                height: 50,
+                decoration: BoxDecoration(
+                    color: GeeColors.white,
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(16),
+                      topRight: Radius.circular(16),
+                      bottomLeft: Radius.zero,
+                      bottomRight: Radius.zero,
                     ),
-                  )
-                : const SizedBox(height: 0),
-            SizedBox(height: isNew ? 20 : 0),
-            SizedBox(
-              // name
-              width: widget.width - 100,
-              height: 70,
-              child: TextFormField(
-                onChanged: (newString) {
-                  _projectEditorStore.name = newString;
-                },
-                initialValue: isNew ? "" : widget.projectRes?.name,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: "Project name",
-                  hintText: "Enter project name",
-                  //fill text if isnt new
-                ),
+                    border: Border.all(color: GeeColors.gray1)),
+                child: Center(
+                    child: Text(
+                        isNew
+                            ? "New project"
+                            : "Project code: ${widget.projectRes?.code}",
+                        style: GeeTextStyles.heading5)),
               ),
-            ),
-            const SizedBox(height: 20),
-            SizedBox(
-              // decribtion
-              width: widget.width - 100,
-              height: isNew ? widget.heigth - 390 : widget.heigth - 300,
-              child: TextFormField(
-                keyboardType: TextInputType.multiline,
-                minLines: ((widget.heigth - 300) / 20).round(),
-                maxLines: null,
-                onChanged: (newString) {
-                  _projectEditorStore.description = newString;
-                },
-                initialValue: isNew ? "" : widget.projectRes?.description,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: "Project decribtion",
-                  alignLabelWithHint: true,
-                  hintText: "Enter project describtion",
-                ),
+              Row(
+                children: [
+                  const SizedBox(width: 20),
+                  Column(
+                    children: [
+                      const SizedBox(height: 20),
+                      isNew
+                          ? SizedBox(
+                              // code
+                              width: widget.width - 400,
+                              height: 70,
+                              child: TextField(
+                                onChanged: (newString) {
+                                  _projectEditorStore.code = newString;
+                                },
+                                decoration: const InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  labelText: "Project code",
+                                  hintText: "Enter project code",
+                                ),
+                              ),
+                            )
+                          : const SizedBox(height: 0),
+                      SizedBox(height: isNew ? 20 : 0),
+                      SizedBox(
+                        // name
+                        width: widget.width - 400,
+                        height: 70,
+                        child: TextFormField(
+                          onChanged: (newString) {
+                            _projectEditorStore.name = newString;
+                          },
+                          initialValue: isNew ? "" : widget.projectRes?.name,
+                          decoration: const InputDecoration(
+                            border: OutlineInputBorder(),
+                            labelText: "Project name",
+                            hintText: "Enter project name",
+                            //fill text if isnt new
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      SizedBox(
+                        // decribtion
+                        width: widget.width - 400,
+                        height:
+                            isNew ? widget.heigth - 390 : widget.heigth - 300,
+                        child: TextFormField(
+                          keyboardType: TextInputType.multiline,
+                          minLines: ((widget.heigth - 300) / 20).round(),
+                          maxLines: null,
+                          onChanged: (newString) {
+                            _projectEditorStore.description = newString;
+                          },
+                          initialValue:
+                              isNew ? "" : widget.projectRes?.description,
+                          decoration: const InputDecoration(
+                            border: OutlineInputBorder(),
+                            labelText: "Project decribtion",
+                            alignLabelWithHint: true,
+                            hintText: "Enter project describtion",
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 50)
+                    ],
+                  ),
+                  const SizedBox(width: 50),
+                  Column(
+                    children: [
+                      const SizedBox(height: 20),
+                      //statuses
+                      Container(
+                        width: 300,
+                        height: 50,
+                        decoration: BoxDecoration(
+                            color: GeeColors.white,
+                            borderRadius: const BorderRadius.only(
+                              topLeft: Radius.circular(16),
+                              topRight: Radius.circular(16),
+                              bottomLeft: Radius.zero,
+                              bottomRight: Radius.zero,
+                            ),
+                            border: Border.all(color: GeeColors.gray1)),
+                        child: const Center(
+                            child: Text("Statuses:",
+                                style: GeeTextStyles.heading5)),
+                      ),
+                      Container(
+                        width: 300,
+                        height: widget.heigth - 460,
+                        decoration: BoxDecoration(
+                            color: GeeColors.white,
+                            borderRadius: const BorderRadius.only(
+                              bottomLeft: Radius.circular(16),
+                              bottomRight: Radius.circular(16),
+                              topLeft: Radius.zero,
+                              topRight: Radius.zero,
+                            ),
+                            border: Border.all(color: GeeColors.gray1)),
+                        child: Observer(
+                          builder: (_) => GeeFutureChild(
+                            loaded: _loadedStatuses,
+                            status:
+                                _projectEditorStore.futureGetStatuses.status,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      !isNew
+                          ? SizedBox(
+                              width: 300,
+                              height: 50,
+                              child: TextField(
+                                onChanged: (newString) {
+                                  _projectEditorStore.statusCode = newString;
+                                },
+                                decoration: const InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  labelText: "New status code",
+                                  hintText: "Enter new status code",
+                                ),
+                              ),
+                            )
+                          : const SizedBox(height: 0),
+                      const SizedBox(height: 20),
+                      !isNew
+                          ? SizedBox(
+                              width: 300,
+                              height: 50,
+                              child: TextField(
+                                onChanged: (newString) {
+                                  _projectEditorStore.statusName = newString;
+                                },
+                                decoration: const InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  labelText: "New status name",
+                                  hintText: "Enter new status name",
+                                ),
+                              ),
+                            )
+                          : const SizedBox(height: 0),
+                      const SizedBox(height: 20),
+                      !isNew
+                          ? SizedBox(
+                              width: 300,
+                              height: 50,
+                              child: geeUniversalButton(
+                                250,
+                                50,
+                                () {
+                                  _projectEditorStore.postStatus(context);
+                                },
+                                "Add new status",
+                              ),
+                            )
+                          : const SizedBox(height: 0),
+                      const SizedBox(height: 40),
+                    ],
+                  ),
+                ],
               ),
-            ),
-            const SizedBox(height: 50),
-            //save button
-            geeUniversalButton(
-              widget.width - 100,
-              50,
-              () async {
-                isNew
-                    ? await _projectEditorStore.postProject(context)
-                    : await _projectEditorStore.updateProject(context);
-                setState(() {});
-              },
-              "Save",
-            ),
-          ]),
+              //save button
+              geeUniversalButton(
+                widget.width - 100,
+                50,
+                () async {
+                  isNew
+                      ? await _projectEditorStore.postProject(context)
+                      : await _projectEditorStore.updateProject(context);
+                  setState(() {});
+                },
+                "Save",
+              ),
+            ],
+          ),
         ),
       ],
+    );
+  }
+
+  Widget _loadedStatuses() {
+    return ListView.builder(
+      itemCount: _projectEditorStore.statuses.length,
+      itemBuilder: (context, index) {
+        return Row(
+          children: [
+            const SizedBox(width: 20),
+            Container(
+              width: 250,
+              height: 50,
+              decoration: BoxDecoration(
+                color: GeeColors.white,
+                border: Border(
+                  bottom: BorderSide(color: GeeColors.gray1, width: 1),
+                ),
+              ),
+              child: Center(
+                child: Text(
+                  "${_projectEditorStore.statuses[index].name} (${_projectEditorStore.statuses[index].code.substring(_projectEditorStore.code!.length)})",
+                  style: GeeTextStyles.paragraph2,
+                ),
+              ),
+            ),
+            // const SizedBox(width: 20),
+            // IconButton(
+            //   icon: const Icon(Icons.delete),
+            //   onPressed: () {},
+            // ),
+          ],
+        );
+      },
     );
   }
 }

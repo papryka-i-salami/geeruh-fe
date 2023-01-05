@@ -55,7 +55,7 @@ class _StartScreenState extends StateWithLifecycle<StartScreen> {
                       await GeePopup(
                         context,
                         content: GeeProjectEditor(
-                            width: 700, heigth: 700, startStore: _startStore),
+                            width: 900, heigth: 700, startStore: _startStore),
                       ).show();
                     }, "Add project"),
                   ),
@@ -75,12 +75,6 @@ class _StartScreenState extends StateWithLifecycle<StartScreen> {
               Navigator.pushNamed(context, ConstantScreens.devScreen);
             }, "Go to Dev screen"),
           ),
-          const SizedBox(height: 30),
-          Center(
-            child: geeUniversalButton(250, 70, () {
-              Navigator.pushNamed(context, ConstantScreens.boardScreen);
-            }, "Go to Board Screen"),
-          ),
         ],
       ),
     );
@@ -94,7 +88,7 @@ class _StartScreenState extends StateWithLifecycle<StartScreen> {
             .map((project) => geeListButton(() async {
                   await GeePopup(context,
                           content: GeeProjectEditor(
-                              width: 700,
+                              width: 900,
                               heigth: 700,
                               startStore: _startStore,
                               projectRes: project))

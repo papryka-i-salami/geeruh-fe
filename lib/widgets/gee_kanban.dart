@@ -115,8 +115,7 @@ class _GeeKanbanState extends State<GeeKanban> {
 
   Color _colorFromId(String id) {
     int orderNumber = widget.boardStore.statuses
-        .firstWhere((status) => status.code == id)
-        .orderNumber;
+        .lastIndexWhere((status) => status.code == id);
     int numOfStatuses = widget.boardStore.statuses.length;
     double minSaturation = HSVColor.fromColor(GeeColors.secondary3).saturation;
     double maxSaturation = HSVColor.fromColor(GeeColors.secondary1).saturation;
