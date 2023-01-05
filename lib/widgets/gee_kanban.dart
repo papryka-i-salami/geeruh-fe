@@ -53,8 +53,6 @@ class _GeeKanbanState extends State<GeeKanban> {
     super.initState();
   }
 
-  // TODO race because widget is being build before updateIssueStatus is finished
-
   @override
   Widget build(BuildContext context) {
     return Observer(
