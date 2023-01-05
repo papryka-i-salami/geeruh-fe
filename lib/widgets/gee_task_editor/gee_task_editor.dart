@@ -228,15 +228,15 @@ class _GeeTaskEditorState extends StateWithLifecycle<GeeTaskEditor> {
                     ],
                   ),
                 ),
-                // TODO icon
-                // if(issueComment.creatorUserId =)
-                IconButton(
-                  icon: Icon(Icons.delete, size: 25, color: GeeColors.red),
-                  onPressed: () {
-                    widget.boardStore
-                        .deleteComment(context, issueComment.commentId);
-                  },
-                ),
+                if (issueComment.creatorUserId ==
+                    widget.boardStore.currentUser!.userId)
+                  IconButton(
+                    icon: Icon(Icons.delete, size: 25, color: GeeColors.red),
+                    onPressed: () {
+                      widget.boardStore
+                          .deleteComment(context, issueComment.commentId);
+                    },
+                  ),
               ],
             );
           },
@@ -416,7 +416,7 @@ class _GeeTaskEditorState extends StateWithLifecycle<GeeTaskEditor> {
   }
 
   Widget _approveButton() {
-    String userId = "";
+    String? userId;
     return geeUniversalButton(200, 100, () async {
       widget.item.id == ""
           ? await _taskEditorStore.postIssue(context)

@@ -79,6 +79,9 @@ abstract class ApiRequests extends ChopperService {
   @Get(path: "/logout")
   Future<Response> logout();
 
+  @Get(path: "/session")
+  Future<Response<UserRes>> getSession();
+
 // -------------------------------------------
 
   @Post(path: "/users")
@@ -102,6 +105,6 @@ abstract class ApiRequests extends ChopperService {
 
   @Delete(path: "/comments/{commentId}")
   Future<Response> deleteComment(
-    @Path("issueId") String commentId,
+    @Path("commentId") String commentId,
   );
 }

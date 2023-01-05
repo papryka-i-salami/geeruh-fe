@@ -5,6 +5,7 @@ import 'package:geeruh/api/api_requests.dart';
 import 'package:geeruh/main.dart';
 import 'package:mobx/mobx.dart';
 import 'package:provider/provider.dart';
+import 'package:collection/collection.dart';
 
 part 'board_store.g.dart';
 
@@ -20,7 +21,8 @@ abstract class _BoardStore with Store {
         <String, dynamic>{}) as Map;
     projectCode = arguments['projectCode'];
 
-    await getStatuses(context);
+    await getCurrentUser(navigatorKey.currentContext!);
+    await getStatuses(navigatorKey.currentContext!);
     await getIssues(navigatorKey.currentContext!);
     await getUsers(navigatorKey.currentContext!);
     await getComments(navigatorKey.currentContext!);
@@ -47,6 +49,9 @@ abstract class _BoardStore with Store {
   @observable
   String? newComment;
 
+  @observable
+  UserRes? currentUser;
+
   @action
   void setAssignee(String newAssignee) {
     assignee = newAssignee;
@@ -67,6 +72,21 @@ abstract class _BoardStore with Store {
           issues.add(issue);
         }
       }
+    }
+  }
+
+  @observable
+  ObservableFuture futureGetCurrentUser = ObservableFuture.value(null);
+
+  @action
+  Future getCurrentUser(BuildContext context) {
+    return futureGetCurrentUser = ObservableFuture(_getCurrentUser(context));
+  }
+
+  Future _getCurrentUser(BuildContext context) async {
+    final response = await apiRequest(_api.getSession(), context);
+    if (response.isSuccessful) {
+      currentUser = response.body!;
     }
   }
 
@@ -178,16 +198,16 @@ abstract class _BoardStore with Store {
     return issuesIds;
   }
 
-  String getUserIdByName(String userName) {
+  String? getUserIdByName(String userName) {
     if (userName == "Empty") {
       return "";
     } else {
       List<String> userNewName = userName.split(" ");
-      return users
-          .firstWhere((user) =>
-              user.firstName == userNewName[0] &&
-              user.surname == userNewName[1])
-          .userId;
+      UserRes? user = users.firstWhereOrNull((user) =>
+          user.firstName == userNewName[0] && user.surname == userNewName[1]);
+
+      String userId = user == null ? "" : user.userId;
+      return userId == "" ? null : userId;
     }
   }
 

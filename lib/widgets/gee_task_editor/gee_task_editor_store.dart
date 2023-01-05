@@ -55,16 +55,17 @@ abstract class _GeeTaskEditorStore with Store {
   ObservableFuture futureUpdateIssue = ObservableFuture.value(null);
 
   @action
-  Future updateIssue(BuildContext context, String issueId, String newAssignee) {
+  Future updateIssue(
+      BuildContext context, String issueId, String? newAssignee) {
     return futureUpdateIssue =
         ObservableFuture(_updateIssue(context, issueId, newAssignee));
   }
 
   Future _updateIssue(
-      BuildContext context, String issueId, String newAssignee) async {
+      BuildContext context, String issueId, String? newAssignee) async {
     final responseUpdateAssignee = await apiRequest(
         _api.updateIssueAssignee(
-            issueId, UpdateIssueAssigneeReq(assigneeUserId: newAssignee)),
+            issueId, UpdateIssueAssigneeReq(assigneeUserId: newAssignee ?? "")),
         context);
 
     if (responseUpdateAssignee.isSuccessful) {
