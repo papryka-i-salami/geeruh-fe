@@ -103,7 +103,7 @@ class _GeeProjectEditorState extends StateWithLifecycle<GeeProjectEditor> {
             ),
             const SizedBox(height: 20),
             SizedBox(
-              // decribtion
+              // description
               width: widget.width - 100,
               height: isNew ? widget.heigth - 390 : widget.heigth - 300,
               child: TextFormField(
@@ -116,9 +116,9 @@ class _GeeProjectEditorState extends StateWithLifecycle<GeeProjectEditor> {
                 initialValue: isNew ? "" : widget.projectRes?.description,
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(),
-                  labelText: "Project decribtion",
+                  labelText: "Project description",
                   alignLabelWithHint: true,
-                  hintText: "Enter project describtion",
+                  hintText: "Enter project description",
                 ),
               ),
             ),

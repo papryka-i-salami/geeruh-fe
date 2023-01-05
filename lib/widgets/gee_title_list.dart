@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:geeruh/theme.dart';
 
 Widget geeTitleList(double width, double heigth, List<Widget> entries,
-    [String title = 'Title']) {
+    [String title = '', String? imagePath, Color? color]) {
   return Column(
     children: [
       Container(
@@ -16,12 +16,20 @@ Widget geeTitleList(double width, double heigth, List<Widget> entries,
               bottomLeft: Radius.zero,
               bottomRight: Radius.zero,
             ),
-            border: Border.all(color: GeeColors.gray1)),
-        //text in child
+            border: Border.all(color: color ?? GeeColors.gray1)),
         child: Center(
-          child: Text(
-            title,
-            style: GeeTextStyles.heading5,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              imagePath != null
+                  ? Image.asset(imagePath, width: 40, height: 40)
+                  : const SizedBox(),
+              const SizedBox(width: 20),
+              Text(
+                title,
+                style: GeeTextStyles.heading5,
+              ),
+            ],
           ),
         ),
       ),
