@@ -9,5 +9,5 @@ class ConstantScreens {
 class ConstantDev {
   static const isDev = true;
   // static const hostAddress = "http://localhost:8080";
-  static const hostAddress = "http://34.116.138.46:8080/api"; // nginx proxy
+  static const hostAddress = "https://geeruh.anczykowski.com/api"; // nginx proxy
 }
