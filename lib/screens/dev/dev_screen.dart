@@ -3,6 +3,8 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:geeruh/screens/dev/dev_store.dart';
 import 'package:geeruh/theme.dart';
 import 'package:geeruh/utils/state_with_lifecycle.dart';
+import 'package:geeruh/widgets/gee_avatar.dart';
+import 'package:geeruh/widgets/gee_nav_bar.dart';
 import 'package:geeruh/widgets/gee_priority_dropdown.dart';
 
 class DevScreen extends StatefulWidget {
@@ -23,9 +25,7 @@ class _DevScreenState extends StateWithLifecycle<DevScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Dev screen"),
-      ),
+      appBar: const GeeNavBar(),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -33,6 +33,12 @@ class _DevScreenState extends StateWithLifecycle<DevScreen> {
             builder: (_) => Center(
               child: Text(_devStore.issues.toString()),
             ),
+          ),
+          Row(
+            children: [
+              IconButton(onPressed: () {}, icon: geeAvatar(4, "Maks", 30)),
+              geeAvatar(1, "Maks", 40),
+            ],
           ),
           Row(
             children: [

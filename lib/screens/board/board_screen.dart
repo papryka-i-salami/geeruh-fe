@@ -9,6 +9,7 @@ import 'package:geeruh/utils/state_with_lifecycle.dart';
 import 'package:geeruh/widgets/gee_build_card.dart';
 import 'package:geeruh/widgets/gee_future_child.dart';
 import 'package:geeruh/widgets/gee_kanban.dart';
+import 'package:geeruh/widgets/gee_nav_bar.dart';
 import 'package:geeruh/widgets/gee_popup.dart';
 import 'package:geeruh/widgets/gee_priority_dropdown.dart';
 import 'package:geeruh/widgets/gee_task_editor/gee_task_editor.dart';
@@ -34,9 +35,7 @@ class _BoardScreenState extends StateWithLifecycle<BoardScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Board Screen"),
-      ),
+      appBar: const GeeNavBar(),
       body: Scaffold(
         body: Observer(
           builder: (_) => GeeFutureChild(

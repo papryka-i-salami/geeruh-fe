@@ -34,7 +34,7 @@ class GeeColors {
   static final orange = Color(0xFFCC8829);
   static final yellow = Color(0xFFCCB129);
   static final white = Color(0xFFFFFFFF);
-  static final black = Color(0x00000000);
+  static final black = Color(0xFF000000);
 
   static Color svModify({required Color color, double s = 1, double v = 1}) {
     return HSVColor.fromColor(color).withSaturation(s).withValue(v).toColor();
