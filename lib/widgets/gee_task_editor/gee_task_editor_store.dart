@@ -44,6 +44,14 @@ abstract class _GeeTaskEditorStore with Store {
   }
 
   @observable
+  String selectedChildIssue = "";
+
+  @action
+  selectChildIssue(String newChildIssue) {
+    selectedChildIssue = newChildIssue;
+  }
+
+  @observable
   ObservableFuture futureUpdateIssue = ObservableFuture.value(null);
 
   @action

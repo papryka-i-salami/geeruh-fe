@@ -23,6 +23,7 @@ abstract class _BoardStore with Store {
     await getStatuses(context);
     await getIssues(navigatorKey.currentContext!);
     await getUsers(navigatorKey.currentContext!);
+    await getComments(navigatorKey.currentContext!);
   }
 
   @observable
@@ -35,10 +36,16 @@ abstract class _BoardStore with Store {
   ObservableList<UserRes> users = ObservableList.of([]);
 
   @observable
+  ObservableList<CommentRes> comments = ObservableList.of([]);
+
+  @observable
   ObservableFuture futureGetIssues = ObservableFuture.value(null);
 
   @observable
   String assignee = "";
+
+  @observable
+  String? newComment;
 
   @action
   void setAssignee(String newAssignee) {
@@ -91,6 +98,51 @@ abstract class _BoardStore with Store {
     final response = await apiRequest(_api.getUsers(), context);
     if (response.isSuccessful) {
       users = ObservableList.of(response.body!);
+    }
+  }
+
+  @observable
+  ObservableFuture futureGetComments = ObservableFuture.value(null);
+
+  @action
+  Future getComments(BuildContext context) {
+    return futureGetComments = ObservableFuture(_getComments(context));
+  }
+
+  Future _getComments(BuildContext context) async {
+    final response = await apiRequest(_api.getComments(), context);
+    if (response.isSuccessful) {
+      comments = ObservableList.of(response.body!);
+    }
+  }
+
+  @observable
+  ObservableFuture futurePostComment = ObservableFuture.value(null);
+
+  @action
+  Future postComment(BuildContext context, String issueId) {
+    return futurePostComment = ObservableFuture(_postComment(context, issueId));
+  }
+
+  Future _postComment(BuildContext context, String issueId) async {
+    final response = await apiRequest(
+        _api.postComment(PostCommentReq(content: newComment!), issueId),
+        context);
+    if (response.isSuccessful) {
+      await getComments(navigatorKey.currentContext!);
+    }
+  }
+
+  @action
+  Future deleteComment(BuildContext context, String commentId) {
+    return futurePostComment =
+        ObservableFuture(_deleteComment(context, commentId));
+  }
+
+  Future _deleteComment(BuildContext context, String commentId) async {
+    final response = await apiRequest(_api.deleteComment(commentId), context);
+    if (response.isSuccessful) {
+      await getComments(navigatorKey.currentContext!);
     }
   }
 

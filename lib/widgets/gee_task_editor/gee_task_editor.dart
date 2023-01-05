@@ -135,31 +135,161 @@ class _GeeTaskEditorState extends StateWithLifecycle<GeeTaskEditor> {
         color: GeeColors.white,
       ),
       width: width,
-      child: Column(children: [
-        Text(
-          "Task description",
-          style: GeeTextStyles.heading2.copyWith(color: GeeColors.secondary1),
-        ),
-        const SizedBox(height: 10),
-        Expanded(
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                TextFormField(
-                  onChanged: (newString) {
-                    _taskEditorStore.description = newString;
-                  },
-                  keyboardType: TextInputType.multiline,
-                  maxLines: null,
-                  initialValue: currentIssue.description,
-                  style: GeeTextStyles.paragraph2,
-                  textAlign: TextAlign.justify,
+      child: Column(
+        children: [
+          Text(
+            "Task description:",
+            style: GeeTextStyles.heading2.copyWith(color: GeeColors.secondary1),
+          ),
+          const SizedBox(height: 10),
+          Flexible(
+            fit: FlexFit.tight,
+            flex: 1,
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  TextFormField(
+                    onChanged: (newString) {
+                      _taskEditorStore.description = newString;
+                    },
+                    keyboardType: TextInputType.multiline,
+                    maxLines: null,
+                    initialValue: currentIssue.description,
+                    style: GeeTextStyles.paragraph2,
+                    textAlign: TextAlign.justify,
+                  ),
+                ],
+              ),
+            ),
+          ),
+          currentIssue.issueId == ""
+              ? Row()
+              : Text(
+                  "Comments:",
+                  style: GeeTextStyles.heading2
+                      .copyWith(color: GeeColors.secondary1),
                 ),
+          const SizedBox(height: 10),
+          currentIssue.issueId == ""
+              ? Row()
+              : Observer(
+                  builder: (_) => GeeFutureChild(
+                    loaded: () => commentsWidget(),
+                    status: combineStatuses(
+                      [
+                        widget.boardStore.futureGetComments.status,
+                        widget.boardStore.futurePostComment.status,
+                      ],
+                    ),
+                  ),
+                ),
+        ],
+      ),
+    );
+  }
+
+  Widget listViewForComments(IssueRes currentIssue) {
+    IssueRes currentIssue = widget.item.issue.issueId == ""
+        ? widget.item.issue
+        : widget.boardStore.getIssueById(widget.item.issue.issueId);
+
+    List<CommentRes> issueComments = widget.boardStore.comments
+        .where((comment) => comment.issueId == currentIssue.issueId)
+        .toList();
+    return Container(
+      decoration: BoxDecoration(
+        border: Border.all(color: GeeColors.gray1, width: 1),
+        borderRadius: BorderRadius.circular(8),
+        color: GeeColors.white,
+      ),
+      child: ListView(
+        shrinkWrap: true,
+        padding: const EdgeInsets.all(8),
+        children: issueComments.map(
+          (issueComment) {
+            String personName = widget.boardStore
+                .getUserNameAndSurname(issueComment.creatorUserId);
+            return Row(
+              children: [
+                RichText(
+                  text: TextSpan(
+                    style: GeeTextStyles.paragraph2
+                        .copyWith(color: GeeColors.secondary1),
+                    children: <TextSpan>[
+                      const TextSpan(text: "\u2022 "),
+                      TextSpan(
+                        text: "$personName: ",
+                        style: GeeTextStyles.paragraph2.copyWith(
+                            color: GeeColors.secondary1,
+                            fontWeight: FontWeight.bold),
+                      ),
+                      // ignore: unnecessary_string_interpolations
+                      TextSpan(text: "${issueComment.content}"),
+                    ],
+                  ),
+                ),
+                // TODO icon
+                // if(issueComment.creatorUserId =)
+                IconButton(
+                  icon: Icon(Icons.delete, size: 25, color: GeeColors.red),
+                  onPressed: () {
+                    widget.boardStore
+                        .deleteComment(context, issueComment.commentId);
+                  },
+                ),
+              ],
+            );
+          },
+        ).toList(),
+      ),
+    );
+  }
+
+  Widget commentsWidget() {
+    IssueRes currentIssue = widget.item.issue.issueId == ""
+        ? widget.item.issue
+        : widget.boardStore.getIssueById(widget.item.issue.issueId);
+    return Flexible(
+      fit: FlexFit.tight,
+      flex: 2,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Expanded(
+            child: listViewForComments(currentIssue),
+          ),
+          SingleChildScrollView(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Expanded(
+                  child: TextFormField(
+                    onChanged: (newComment) {
+                      widget.boardStore.newComment = newComment;
+                    },
+                    keyboardType: TextInputType.multiline,
+                    style: GeeTextStyles.paragraph2,
+                    textAlign: TextAlign.start,
+                    minLines: 1,
+                    maxLines: 3,
+                  ),
+                ),
+                const SizedBox(width: 20),
+                geeUniversalButton(50, 50, () async {
+                  {
+                    if (widget.boardStore.newComment != "" &&
+                        widget.boardStore.newComment != null) {
+                      widget.boardStore
+                          .postComment(context, currentIssue.issueId);
+                    }
+                    widget.boardStore.newComment = "";
+                  }
+                }, "Send"),
               ],
             ),
           ),
-        ),
-      ]),
+        ],
+      ),
     );
   }
 
@@ -174,7 +304,7 @@ class _GeeTaskEditorState extends StateWithLifecycle<GeeTaskEditor> {
       width: width,
       child: Column(children: [
         Text(
-          "Activity",
+          "Activity:",
           style: GeeTextStyles.heading2.copyWith(color: GeeColors.secondary1),
         ),
         const SizedBox(height: 10),
@@ -217,28 +347,21 @@ class _GeeTaskEditorState extends StateWithLifecycle<GeeTaskEditor> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Text(
-                        "Assignee",
+                        "Assignee:",
                         style: GeeTextStyles.heading2
                             .copyWith(color: GeeColors.secondary1),
                       ),
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          if (currentIssue.issueId != "")
-                            GeeTextDropdown(
-                              items:
-                                  widget.boardStore.getUsersNamesWithEmptyOne(),
-                              initialValue: currentIssue.assigneeUserId != null
-                                  ? widget.boardStore.getUserNameAndSurname(
-                                      currentIssue.assigneeUserId!)
-                                  : "Empty",
-                              onChanged: (selectedPerson) {
-                                widget.boardStore.setAssignee(selectedPerson);
-                              },
-                            ),
-                        ],
-                      ),
+                      if (currentIssue.issueId != "")
+                        GeeTextDropdown(
+                          items: widget.boardStore.getUsersNamesWithEmptyOne(),
+                          initialValue: currentIssue.assigneeUserId != null
+                              ? widget.boardStore.getUserNameAndSurname(
+                                  currentIssue.assigneeUserId!)
+                              : "Empty",
+                          onChanged: (selectedPerson) {
+                            widget.boardStore.setAssignee(selectedPerson);
+                          },
+                        ),
                       const SizedBox(height: 15),
                       Text(
                         "Parent tasks:",
@@ -247,12 +370,37 @@ class _GeeTaskEditorState extends StateWithLifecycle<GeeTaskEditor> {
                       ),
                       Observer(
                         builder: (_) => GeeFutureChild(
-                            loaded: () => listViewWithDropdown(),
-                            status: combineStatuses([
+                          loaded: () => listViewWithDropdownParent(),
+                          status: combineStatuses(
+                            [
                               _taskEditorStore.futureMakeIssueRelation.status,
                               widget.boardStore.futureGetIssues.status,
-                            ])),
+                            ],
+                          ),
+                        ),
                       ),
+                      const SizedBox(height: 15),
+                      currentIssue.relatedIssuesChildren.isEmpty
+                          ? Row()
+                          : Text(
+                              "Child tasks:",
+                              style: GeeTextStyles.heading2
+                                  .copyWith(color: GeeColors.secondary1),
+                            ),
+                      currentIssue.relatedIssuesChildren.isEmpty
+                          ? Row()
+                          : Observer(
+                              builder: (_) => GeeFutureChild(
+                                loaded: () => listViewWithoutDropdown(),
+                                status: combineStatuses(
+                                  [
+                                    _taskEditorStore
+                                        .futureMakeIssueRelation.status,
+                                    widget.boardStore.futureGetIssues.status,
+                                  ],
+                                ),
+                              ),
+                            ),
                       Expanded(
                         child: Align(
                           alignment: Alignment.bottomCenter,
@@ -278,66 +426,100 @@ class _GeeTaskEditorState extends StateWithLifecycle<GeeTaskEditor> {
               await _taskEditorStore.updateIssue(
                   context, widget.item.id, userId)
             };
-      // setState(() {});
     }, "Approve");
   }
 
-  Widget listViewWithDropdown() {
+  Widget listViewWithoutDropdown() {
+    IssueRes currentIssue = widget.item.issue.issueId == ""
+        ? widget.item.issue
+        : widget.boardStore.getIssueById(widget.item.issue.issueId);
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        ListView(
+          shrinkWrap: true,
+          padding: const EdgeInsets.all(8),
+          children: currentIssue.relatedIssuesChildren
+              .map(
+                (parentIssue) => Row(
+                  children: [
+                    Text(
+                      "\u2022 $parentIssue",
+                      style: GeeTextStyles.paragraph2
+                          .copyWith(color: GeeColors.secondary1),
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.delete, size: 25, color: GeeColors.red),
+                      onPressed: () {
+                        _taskEditorStore.removeIssueRelation(
+                            context, parentIssue, currentIssue.issueId);
+                      },
+                    ),
+                  ],
+                ),
+              )
+              .toList(),
+        ),
+      ],
+    );
+  }
+
+  Widget listViewWithDropdownParent() {
     IssueRes currentIssue = widget.item.issue.issueId == ""
         ? widget.item.issue
         : widget.boardStore.getIssueById(widget.item.issue.issueId);
     return Observer(
-      builder: (_) => Expanded(
-        child: Column(
-          children: [
-            ListView(
-              shrinkWrap: true,
-              padding: const EdgeInsets.all(8),
-              children: currentIssue.relatedIssues
-                  .map(
-                    (parentIssue) => Row(
-                      children: [
-                        Text(
-                          "\u2022 $parentIssue",
-                          style: GeeTextStyles.paragraph2
-                              .copyWith(color: GeeColors.secondary1),
-                        ),
-                        IconButton(
-                          icon: Icon(Icons.delete,
-                              size: 25, color: GeeColors.red),
-                          onPressed: () {
-                            _taskEditorStore.removeIssueRelation(
-                                context, currentIssue.issueId, parentIssue);
-                          },
-                        ),
-                      ],
-                    ),
-                  )
-                  .toList(),
-            ),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                GeeTextDropdown(
-                  items: widget.boardStore
-                      .getIssuesWithoutSelectedOnes(currentIssue),
-                  initialValue: "Empty",
-                  onChanged: (selectedParentIssue) {
-                    _taskEditorStore.selectParentIssue(selectedParentIssue);
-                    if (_taskEditorStore.selectedParentIssue != "" &&
-                        _taskEditorStore.selectedParentIssue != "Empty") {
-                      _taskEditorStore.makeIssueRelation(
-                          context,
-                          currentIssue.issueId,
-                          _taskEditorStore.selectedParentIssue);
-                    }
-                  },
-                ),
-              ],
-            ),
-          ],
-        ),
+      builder: (_) => Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          ListView(
+            shrinkWrap: true,
+            padding: const EdgeInsets.all(8),
+            children: currentIssue.relatedIssues
+                .map(
+                  (parentIssue) => Row(
+                    children: [
+                      Text(
+                        "\u2022 $parentIssue",
+                        style: GeeTextStyles.paragraph2
+                            .copyWith(color: GeeColors.secondary1),
+                      ),
+                      IconButton(
+                        icon:
+                            Icon(Icons.delete, size: 25, color: GeeColors.red),
+                        onPressed: () {
+                          _taskEditorStore.removeIssueRelation(
+                              context, currentIssue.issueId, parentIssue);
+                        },
+                      ),
+                    ],
+                  ),
+                )
+                .toList(),
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              GeeTextDropdown(
+                items: widget.boardStore
+                    .getIssuesWithoutSelectedOnes(currentIssue),
+                initialValue: "Empty",
+                onChanged: (selectedParentIssue) {
+                  _taskEditorStore.selectParentIssue(selectedParentIssue);
+                  if (_taskEditorStore.selectedParentIssue != "" &&
+                      _taskEditorStore.selectedParentIssue != "Empty") {
+                    _taskEditorStore.makeIssueRelation(
+                        context,
+                        currentIssue.issueId,
+                        _taskEditorStore.selectedParentIssue);
+                  }
+                },
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
