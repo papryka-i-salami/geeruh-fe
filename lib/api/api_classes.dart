@@ -147,6 +147,19 @@ class PostProjectReq {
 }
 
 @JsonSerializable()
+class PostStatusReq {
+  String name;
+  int orderNumber;
+
+  PostStatusReq({required this.name, required this.orderNumber});
+
+  factory PostStatusReq.fromJson(Map<String, dynamic> json) =>
+      _$PostStatusReqFromJson(json);
+
+  Map<String, dynamic> toJson() => _$PostStatusReqToJson(this);
+}
+
+@JsonSerializable()
 class StatusRes {
   String code;
   String name;
@@ -206,4 +219,41 @@ class UserRes {
       _$UserResFromJson(json);
 
   Map<String, dynamic> toJson() => _$UserResToJson(this);
+}
+
+@JsonSerializable()
+class CommentRes {
+  String commentId;
+  String issueId;
+  String creatorUserId;
+  String content;
+  String createdAt;
+  String? modifiedAt;
+  CommentRes({
+    required this.commentId,
+    required this.issueId,
+    required this.creatorUserId,
+    required this.content,
+    required this.createdAt,
+    this.modifiedAt,
+  });
+
+  factory CommentRes.fromJson(Map<String, dynamic> json) =>
+      _$CommentResFromJson(json);
+
+  Map<String, dynamic> toJson() => _$CommentResToJson(this);
+}
+
+@JsonSerializable()
+class PostCommentReq {
+  String content;
+
+  PostCommentReq({
+    required this.content,
+  });
+
+  factory PostCommentReq.fromJson(Map<String, dynamic> json) =>
+      _$PostCommentReqFromJson(json);
+
+  Map<String, dynamic> toJson() => _$PostCommentReqToJson(this);
 }
