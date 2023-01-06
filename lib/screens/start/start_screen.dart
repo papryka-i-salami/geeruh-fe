@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:geeruh/global_constants.dart';
 import 'package:geeruh/screens/start/start_store.dart';
+import 'package:geeruh/theme.dart';
 import 'package:geeruh/utils/state_with_lifecycle.dart';
+import 'package:geeruh/widgets/gee_nav_bar.dart';
 import 'package:geeruh/widgets/gee_title_list.dart';
 import 'package:geeruh/widgets/gee_universal_button.dart';
 import 'package:geeruh/widgets/gee_popup.dart';
@@ -30,9 +32,7 @@ class _StartScreenState extends StateWithLifecycle<StartScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Home"),
-      ),
+      appBar: const GeeNavBar(),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -75,6 +75,7 @@ class _StartScreenState extends StateWithLifecycle<StartScreen> {
               Navigator.pushNamed(context, ConstantScreens.devScreen);
             }, "Go to Dev screen"),
           ),
+          const SizedBox(height: 30),
         ],
       ),
     );
@@ -95,7 +96,9 @@ class _StartScreenState extends StateWithLifecycle<StartScreen> {
                       .show();
                 }, project.name))
             .toList(),
-        "My Projects");
+        "My Projects",
+        "images/Project.png",
+        GeeColors.secondary1);
   }
 
   Widget _loadedBoards() {
@@ -111,6 +114,8 @@ class _StartScreenState extends StateWithLifecycle<StartScreen> {
                   );
                 }, "Board for ${project.name}"))
             .toList(),
-        "My Boards");
+        "My Boards",
+        "images/Boards.png",
+        GeeColors.secondary2);
   }
 }

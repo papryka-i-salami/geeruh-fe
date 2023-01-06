@@ -5,6 +5,7 @@ import 'package:geeruh/api/api_requests.dart';
 import 'package:geeruh/main.dart';
 import 'package:mobx/mobx.dart';
 import 'package:provider/provider.dart';
+import 'package:collection/collection.dart';
 
 part 'board_store.g.dart';
 
@@ -20,9 +21,11 @@ abstract class _BoardStore with Store {
         <String, dynamic>{}) as Map;
     projectCode = arguments['projectCode'];
 
-    await getStatuses(context);
+    await getCurrentUser(navigatorKey.currentContext!);
+    await getStatuses(navigatorKey.currentContext!);
     await getIssues(navigatorKey.currentContext!);
     await getUsers(navigatorKey.currentContext!);
+    await getComments(navigatorKey.currentContext!);
   }
 
   @observable
@@ -35,10 +38,19 @@ abstract class _BoardStore with Store {
   ObservableList<UserRes> users = ObservableList.of([]);
 
   @observable
+  ObservableList<CommentRes> comments = ObservableList.of([]);
+
+  @observable
   ObservableFuture futureGetIssues = ObservableFuture.value(null);
 
   @observable
   String assignee = "";
+
+  @observable
+  String? newComment;
+
+  @observable
+  UserRes? currentUser;
 
   @action
   void setAssignee(String newAssignee) {
@@ -60,6 +72,21 @@ abstract class _BoardStore with Store {
           issues.add(issue);
         }
       }
+    }
+  }
+
+  @observable
+  ObservableFuture futureGetCurrentUser = ObservableFuture.value(null);
+
+  @action
+  Future getCurrentUser(BuildContext context) {
+    return futureGetCurrentUser = ObservableFuture(_getCurrentUser(context));
+  }
+
+  Future _getCurrentUser(BuildContext context) async {
+    final response = await apiRequest(_api.getSession(), context);
+    if (response.isSuccessful) {
+      currentUser = response.body!;
     }
   }
 
@@ -99,6 +126,51 @@ abstract class _BoardStore with Store {
     }
   }
 
+  @observable
+  ObservableFuture futureGetComments = ObservableFuture.value(null);
+
+  @action
+  Future getComments(BuildContext context) {
+    return futureGetComments = ObservableFuture(_getComments(context));
+  }
+
+  Future _getComments(BuildContext context) async {
+    final response = await apiRequest(_api.getComments(), context);
+    if (response.isSuccessful) {
+      comments = ObservableList.of(response.body!);
+    }
+  }
+
+  @observable
+  ObservableFuture futurePostComment = ObservableFuture.value(null);
+
+  @action
+  Future postComment(BuildContext context, String issueId) {
+    return futurePostComment = ObservableFuture(_postComment(context, issueId));
+  }
+
+  Future _postComment(BuildContext context, String issueId) async {
+    final response = await apiRequest(
+        _api.postComment(PostCommentReq(content: newComment!), issueId),
+        context);
+    if (response.isSuccessful) {
+      await getComments(navigatorKey.currentContext!);
+    }
+  }
+
+  @action
+  Future deleteComment(BuildContext context, String commentId) {
+    return futurePostComment =
+        ObservableFuture(_deleteComment(context, commentId));
+  }
+
+  Future _deleteComment(BuildContext context, String commentId) async {
+    final response = await apiRequest(_api.deleteComment(commentId), context);
+    if (response.isSuccessful) {
+      await getComments(navigatorKey.currentContext!);
+    }
+  }
+
   UserRes getUserById(String userId) {
     return users.firstWhere((user) => user.userId == userId);
   }
@@ -131,16 +203,16 @@ abstract class _BoardStore with Store {
     return issuesIds;
   }
 
-  String getUserIdByName(String userName) {
+  String? getUserIdByName(String userName) {
     if (userName == "Empty") {
       return "";
     } else {
       List<String> userNewName = userName.split(" ");
-      return users
-          .firstWhere((user) =>
-              user.firstName == userNewName[0] &&
-              user.surname == userNewName[1])
-          .userId;
+      UserRes? user = users.firstWhereOrNull((user) =>
+          user.firstName == userNewName[0] && user.surname == userNewName[1]);
+
+      String userId = user == null ? "" : user.userId;
+      return userId == "" ? null : userId;
     }
   }
 

@@ -37,7 +37,7 @@ class _LoginScreenState extends StateWithLifecycle<LoginScreen> {
               borderRadius: BorderRadius.circular(200),
             ),
             child: Center(
-              child: Image.asset('images/logo.png'),
+              child: Image.asset('images/Logo.png'),
             ),
           ),
           const SizedBox(height: 30),

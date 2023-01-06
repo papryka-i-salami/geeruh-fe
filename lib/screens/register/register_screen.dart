@@ -39,7 +39,7 @@ class _RegisterScreenState extends StateWithLifecycle<RegisterScreen> {
                 height: 40.0,
                 width: 40.0,
                 child: Center(
-                  child: Image.asset('images/logo.png'),
+                  child: Image.asset('images/Logo.png'),
                 ),
               ),
             ],
