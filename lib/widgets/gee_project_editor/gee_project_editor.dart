@@ -62,12 +62,36 @@ class _GeeProjectEditorState extends StateWithLifecycle<GeeProjectEditor> {
                       bottomRight: Radius.zero,
                     ),
                     border: Border.all(color: GeeColors.gray1)),
-                child: Center(
-                    child: Text(
-                        isNew
-                            ? "New project"
-                            : "Project code: ${widget.projectRes?.code}",
-                        style: GeeTextStyles.heading5)),
+                child: Stack(
+                  children: [
+                    Center(
+                        child: Text(
+                            isNew
+                                ? "New project"
+                                : "Project code: ${widget.projectRes?.code}",
+                            style: GeeTextStyles.heading5)),
+                    isNew
+                        ? const SizedBox(height: 0)
+                        : Align(
+                            alignment: const Alignment(0.95, 0),
+                            child: //delete button
+                                ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                minimumSize: const Size(120, 40),
+                                backgroundColor: GeeColors.red,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(6),
+                                ),
+                              ),
+                              key: const Key("delete"),
+                              onPressed: () {
+                                _projectEditorStore.deleteProject(context);
+                              },
+                              child: const Text("Delete",
+                                  style: GeeTextStyles.heading6),
+                            )),
+                  ],
+                ),
               ),
               Row(
                 children: [

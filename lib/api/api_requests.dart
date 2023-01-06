@@ -67,6 +67,11 @@ abstract class ApiRequests extends ChopperService {
     @Body() PutProjectReq projectReq,
   );
 
+  @Delete(path: "/projects/{projectCode}")
+  Future<Response<void>> deleteProject(
+    @Path("projectCode") String projectCode,
+  );
+
   @Post(path: "/projects/{projectCode}")
   Future<Response<ProjectRes>> postProject(
     @Path("projectCode") String projectCode,
