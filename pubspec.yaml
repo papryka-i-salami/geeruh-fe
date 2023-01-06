@@ -49,6 +49,7 @@ dependencies:
   desktop_window: ^0.4.0
   functional_widget: ^0.10.1
   http: ^0.13.5
+  collection: ^1.16.0
 
 dev_dependencies:
   flutter_test:

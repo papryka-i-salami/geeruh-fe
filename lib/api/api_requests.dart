@@ -56,6 +56,11 @@ abstract class ApiRequests extends ChopperService {
     @Path("relatedIssueId") String relatedIssueId,
   );
 
+  @Delete(path: "/issues/{issueId}")
+  Future<Response> removeIssue(
+    @Path("issueId") String issueId,
+  );
+
 // -------------------------------------------
 
   @Get(path: "/projects")
