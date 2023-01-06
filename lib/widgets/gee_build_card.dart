@@ -101,6 +101,7 @@ class _GeeBuildCardState extends State<_GeeBuildCard> {
       cursor: SystemMouseCursors.click,
       child: GestureDetector(
           child: Image.asset(
+            key: ValueKey(item.issue.issueId),
             "images/EditPencil.png",
             width: 24,
             height: 24,

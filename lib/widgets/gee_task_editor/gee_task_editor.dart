@@ -370,7 +370,7 @@ class _GeeTaskEditorState extends StateWithLifecycle<GeeTaskEditor> {
                       ),
                       Observer(
                         builder: (_) => GeeFutureChild(
-                          loaded: () => listViewWithDropdownParent(),
+                          loaded: () => listViewWithDropdownParent(const ValueKey("parentTaskDropdown")),
                           status: combineStatuses(
                             [
                               _taskEditorStore.futureMakeIssueRelation.status,
@@ -464,7 +464,7 @@ class _GeeTaskEditorState extends StateWithLifecycle<GeeTaskEditor> {
     );
   }
 
-  Widget listViewWithDropdownParent() {
+  Widget listViewWithDropdownParent([Key? key]) {
     IssueRes currentIssue = widget.item.issue.issueId == ""
         ? widget.item.issue
         : widget.boardStore.getIssueById(widget.item.issue.issueId);
@@ -503,6 +503,7 @@ class _GeeTaskEditorState extends StateWithLifecycle<GeeTaskEditor> {
             mainAxisSize: MainAxisSize.min,
             children: [
               GeeTextDropdown(
+                key: key,
                 items: widget.boardStore
                     .getIssuesWithoutSelectedOnes(currentIssue),
                 initialValue: "Empty",

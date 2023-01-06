@@ -102,6 +102,7 @@ class _GeeProjectEditorState extends StateWithLifecycle<GeeProjectEditor> {
                       isNew
                           ? SizedBox(
                               // code
+                              key: const ValueKey("ProjectCodeTextField"),
                               width: widget.width - 400,
                               height: 70,
                               child: TextField(
@@ -119,6 +120,7 @@ class _GeeProjectEditorState extends StateWithLifecycle<GeeProjectEditor> {
                       SizedBox(height: isNew ? 20 : 0),
                       SizedBox(
                         // name
+                        key: const ValueKey("ProjectNameTextField"),
                         width: widget.width - 400,
                         height: 70,
                         child: TextFormField(
@@ -137,6 +139,7 @@ class _GeeProjectEditorState extends StateWithLifecycle<GeeProjectEditor> {
                       const SizedBox(height: 20),
                       SizedBox(
                         // decribtion
+                        key: const ValueKey("ProjectDescriptionTextField"),
                         width: widget.width - 400,
                         height:
                             isNew ? widget.heigth - 390 : widget.heigth - 300,

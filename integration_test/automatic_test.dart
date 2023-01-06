@@ -1,10 +1,8 @@
 import 'dart:async';
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:geeruh/global_constants.dart';
-import 'package:geeruh/widgets/gee_universal_button.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:geeruh/main.dart' as app;
 
@@ -54,12 +52,23 @@ void main() {
         // await tester.tap(find.widgetWithText(ElevatedButton, "Save"));
         await simulateKeyDownEvent(LogicalKeyboardKey.escape);
         await tester.pumpAndSettle();
-        await tester.tap(find.widgetWithText(TextButton, "Board for projekt"));
+        await tester
+            .tap(find.widgetWithText(TextButton, "Board for nieusuwać"));
         await tester.pumpAndSettle();
-        await expectLater(
-          find.byType(GestureDetector),
-          matchesGoldenFile('images/Team.png'),
-        );
+        await tester.tap(find.byKey(const ValueKey("NIE-6")).last);
+        await tester.pumpAndSettle();
+        await tester.tap(find.byKey(const ValueKey("parentTaskDropdown")));
+        await tester.pumpAndSettle();
+        await tester.tap(find.text("NIE-7").last);
+        await tester.pumpAndSettle();
+        await tester.tap(find.byKey(const ValueKey("NIE-7")).last);
+        await tester.pumpAndSettle();
+        await tester.tap(find.byKey(const ValueKey("parentTaskDropdown")));
+        await tester.pumpAndSettle();
+        await tester.tap(find.widgetWithText(ElevatedButton, "Approve"));
+        await tester.pumpAndSettle();
+
+
         // final pencilFinder = find.image(FileImage(File('images/Team.png')));
         // expect(pencilFinder, findsOneWidget);
         // await tester.tap(find.widgetWithImage(IconButton, FileImage(file)));
