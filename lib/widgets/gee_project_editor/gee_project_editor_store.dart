@@ -52,6 +52,9 @@ abstract class _GeeProjectEditorStore with Store {
   ObservableFuture futurePostProject = ObservableFuture.value(null);
 
   @observable
+  ObservableFuture futureDeleteProject = ObservableFuture.value(null);
+
+  @observable
   ObservableList<StatusRes> statuses = ObservableList.of([]);
 
   @observable
@@ -69,7 +72,12 @@ abstract class _GeeProjectEditorStore with Store {
     statuses.clear();
     final response = await apiRequest(_api.getStatuses(), context);
     if (response.isSuccessful) {
-      orderNumber = response.body!.length + 1;
+      orderNumber = ObservableList.of(response.body!).fold(
+              0,
+              (previousValue, element) => previousValue > element.orderNumber
+                  ? previousValue
+                  : element.orderNumber) +
+          1;
       if (code != null) {
         for (var status in ObservableList.of(response.body!)) {
           if (status.code.startsWith(code!)) {
@@ -109,6 +117,19 @@ abstract class _GeeProjectEditorStore with Store {
     if (response.isSuccessful) {
       Navigator.pop(navigatorKey.currentContext!);
       await startStoreToGet!.getProjects(navigatorKey.currentContext!);
+    }
+  }
+
+  @action
+  Future deleteProject(BuildContext context) {
+    return futureDeleteProject = ObservableFuture(_deleteProject(context));
+  }
+
+  Future _deleteProject(BuildContext context) async {
+    final response = await apiRequest(_api.deleteProject(code!), context);
+    if (response.isSuccessful) {
+      Navigator.pop(navigatorKey.currentContext!);
+      startStoreToGet!.getProjects(navigatorKey.currentContext!);
     }
   }
 

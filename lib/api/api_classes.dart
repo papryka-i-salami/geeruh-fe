@@ -3,6 +3,15 @@ import 'package:json_annotation/json_annotation.dart';
 part 'api_classes.g.dart';
 
 @JsonSerializable()
+class EmptyRes {
+  EmptyRes();
+  factory EmptyRes.fromJson(Map<String, dynamic> json) =>
+      _$EmptyResFromJson(json);
+
+  Map<String, dynamic> toJson() => _$EmptyResToJson(this);
+}
+
+@JsonSerializable()
 class IssueRes {
   String issueId;
   String statusCode;
