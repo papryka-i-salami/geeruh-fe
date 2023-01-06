@@ -1,9 +1,15 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:geeruh/global_constants.dart';
+import 'package:geeruh/widgets/gee_universal_button.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:geeruh/main.dart' as app;
+
+String lorem =
+    "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla at rutrum sem. Morbi lectus augue, pulvinar at lectus nec, rutrum dictum arcu. Pellentesque aliquam malesuada libero, id laoreet erat faucibus non.";
 
 int screenCounter = 1;
 late Finder fab;
@@ -16,9 +22,47 @@ void main() {
         app.main();
         await tester.pumpAndSettle();
         await oneCallKey(
-            ConstantScreens.devScreen, 1, false, tester, binding, "Linux");
+            ConstantScreens.loginScreen, 1, false, tester, binding, "Linux");
+        await oneCallKey("GeeruhLogo", 1, false, tester, binding, "Linux");
+        final signUpFinder = find.text("Sign up");
+        final loginFinder = find.text("Log in");
+        expect(signUpFinder, findsOneWidget);
+        expect(loginFinder, findsOneWidget);
+        await tester.enterText(
+            find.byKey(const ValueKey("LoginLoginTextField")), "user");
         await tester.pumpAndSettle();
-        await oneCallKey("HelloWorld", 1, false, tester, binding, "Linux");
+        await tester.enterText(
+            find.byKey(const ValueKey("LoginPasswordTextField")), "password");
+        await tester.pumpAndSettle();
+        await tester.tap(find.widgetWithText(ElevatedButton, "Log in"));
+        await tester.pumpAndSettle();
+        final allProjectsFinder = find.text("My Projects");
+        final allBoardsFinder = find.text("My Boards");
+        expect(allProjectsFinder, findsOneWidget);
+        expect(allBoardsFinder, findsOneWidget);
+        await tester.tap(find.widgetWithText(ElevatedButton, "Add project"));
+        await tester.pumpAndSettle();
+        await tester.enterText(
+            find.byKey(const ValueKey("ProjectCodeTextField")), "KODPROJEKTU");
+        await tester.pumpAndSettle();
+        await tester.enterText(
+            find.byKey(const ValueKey("ProjectNameTextField")), "superprojekt");
+        await tester.pumpAndSettle();
+        await tester.enterText(
+            find.byKey(const ValueKey("ProjectDescriptionTextField")), lorem);
+        await tester.pumpAndSettle();
+        // await tester.tap(find.widgetWithText(ElevatedButton, "Save"));
+        await simulateKeyDownEvent(LogicalKeyboardKey.escape);
+        await tester.pumpAndSettle();
+        await tester.tap(find.widgetWithText(TextButton, "Board for projekt"));
+        await tester.pumpAndSettle();
+        await expectLater(
+          find.byType(GestureDetector),
+          matchesGoldenFile('images/Team.png'),
+        );
+        // final pencilFinder = find.image(FileImage(File('images/Team.png')));
+        // expect(pencilFinder, findsOneWidget);
+        // await tester.tap(find.widgetWithImage(IconButton, FileImage(file)));
       });
     });
   });

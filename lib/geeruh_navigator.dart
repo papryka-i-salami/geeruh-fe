@@ -21,7 +21,8 @@ Route geeruhPageRoute(
 
     case ConstantScreens.loginScreen:
       return MaterialPageRoute(
-        builder: (_) => const LoginScreen(),
+        builder: (_) =>
+            const LoginScreen(key: ValueKey(ConstantScreens.loginScreen)),
       );
 
     case ConstantScreens.boardScreen:

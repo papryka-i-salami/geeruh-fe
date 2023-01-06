@@ -7,7 +7,7 @@ Widget geeAvatar(int id, String name, double size) {
     height: size,
     decoration: BoxDecoration(
       border: Border.all(color: GeeColors.gray2, width: 1),
-      color: HSVColor.fromAHSV(0.9, id * 19 % 360, 1, 1).toColor(),
+      color: HSVColor.fromAHSV(1, id * 19 % 360, 1, 1).toColor(),
       borderRadius: BorderRadius.circular(size),
     ),
     child: Center(

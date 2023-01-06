@@ -19,12 +19,12 @@ Future<void> main() async {
   _addProvider(chopper);
   _addProvider(cookieStore);
   _addProvider(ApiRequests.create(chopper));
-  runApp(const MyApp());
+  runApp(const GeeruhApp());
   DesktopWindow.setMinWindowSize(const Size(1000, 1000));
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class GeeruhApp extends StatelessWidget {
+  const GeeruhApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -52,11 +52,3 @@ Widget _wrapWithProviders(MaterialApp matieralApp) => provider.MultiProvider(
     );
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
-
-class Counter {
-  int value = 0;
-
-  void increment() => value++;
-
-  void decrement() => value--;
-}

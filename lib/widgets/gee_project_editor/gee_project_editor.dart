@@ -72,6 +72,7 @@ class _GeeProjectEditorState extends StateWithLifecycle<GeeProjectEditor> {
                     width: widget.width - 100,
                     height: 70,
                     child: TextField(
+                      key: const ValueKey("ProjectCodeTextField"),
                       onChanged: (newString) {
                         _projectEditorStore.code = newString;
                       },
@@ -89,6 +90,7 @@ class _GeeProjectEditorState extends StateWithLifecycle<GeeProjectEditor> {
               width: widget.width - 100,
               height: 70,
               child: TextFormField(
+                key: const ValueKey("ProjectNameTextField"),
                 onChanged: (newString) {
                   _projectEditorStore.name = newString;
                 },
@@ -107,6 +109,7 @@ class _GeeProjectEditorState extends StateWithLifecycle<GeeProjectEditor> {
               width: widget.width - 100,
               height: isNew ? widget.heigth - 390 : widget.heigth - 300,
               child: TextFormField(
+                key: const ValueKey("ProjectDescriptionTextField"),
                 keyboardType: TextInputType.multiline,
                 minLines: ((widget.heigth - 300) / 20).round(),
                 maxLines: null,
