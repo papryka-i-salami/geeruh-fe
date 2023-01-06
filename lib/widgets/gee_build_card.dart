@@ -54,7 +54,36 @@ class _GeeBuildCardState extends State<_GeeBuildCard> {
                     textAlign: TextAlign.left,
                   ),
                 ),
-                _editButton(widget.item),
+                _imageIcon(
+                  () async {
+                    await GeePopup(
+                      context,
+                      content: GeeTaskEditor(
+                        key: widget.key,
+                        item: widget.item,
+                        boardStore: widget.boardStore,
+                      ),
+                    ).show();
+                  },
+                  Image.asset(
+                    "images/EditPencil.png",
+                    width: 24,
+                    height: 24,
+                    color: GeeColors.secondary2,
+                  ),
+                ),
+                const SizedBox(width: 10),
+                _imageIcon(
+                  () {
+                    widget.boardStore
+                        .removeIssue(context, widget.item.issue.issueId);
+                  },
+                  Icon(
+                    Icons.delete,
+                    size: 26,
+                    color: GeeColors.red,
+                  ),
+                ),
               ],
             ),
             const SizedBox(height: 10),
@@ -96,24 +125,13 @@ class _GeeBuildCardState extends State<_GeeBuildCard> {
     );
   }
 
-  Widget _editButton(RichTextItem item) {
+  Widget _imageIcon(Function onTap, Widget icon) {
     return MouseRegion(
       cursor: SystemMouseCursors.click,
       child: GestureDetector(
-          child: Image.asset(
-            "images/EditPencil.png",
-            width: 24,
-            height: 24,
-            color: GeeColors.secondary2,
-          ),
-          onTap: () async {
-            await GeePopup(context,
-                content: GeeTaskEditor(
-                  key: widget.key,
-                  item: item,
-                  boardStore: widget.boardStore,
-                )).show();
-          }),
+        child: icon,
+        onTap: () => onTap(),
+      ),
     );
   }
 }

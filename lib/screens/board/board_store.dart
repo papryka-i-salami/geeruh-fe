@@ -239,4 +239,21 @@ abstract class _BoardStore with Store {
         ),
         context);
   }
+
+  @action
+  Future removeIssue(BuildContext context, String issueId) {
+    return futureGetIssues = ObservableFuture(_removeIssue(context, issueId));
+  }
+
+  Future _removeIssue(BuildContext context, String issueId) async {
+    final response = await apiRequest(
+        _api.removeIssue(
+          issueId,
+        ),
+        context);
+
+    if (response.isSuccessful) {
+      await getIssues(navigatorKey.currentContext!);
+    }
+  }
 }
