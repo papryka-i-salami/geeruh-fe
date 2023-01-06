@@ -147,6 +147,19 @@ class PostProjectReq {
 }
 
 @JsonSerializable()
+class PostStatusReq {
+  String name;
+  int orderNumber;
+
+  PostStatusReq({required this.name, required this.orderNumber});
+
+  factory PostStatusReq.fromJson(Map<String, dynamic> json) =>
+      _$PostStatusReqFromJson(json);
+
+  Map<String, dynamic> toJson() => _$PostStatusReqToJson(this);
+}
+
+@JsonSerializable()
 class StatusRes {
   String code;
   String name;

@@ -55,7 +55,7 @@ class _StartScreenState extends StateWithLifecycle<StartScreen> {
                       await GeePopup(
                         context,
                         content: GeeProjectEditor(
-                            width: 700, heigth: 700, startStore: _startStore),
+                            width: 900, heigth: 700, startStore: _startStore),
                       ).show();
                     }, "Add project"),
                   ),
@@ -89,7 +89,7 @@ class _StartScreenState extends StateWithLifecycle<StartScreen> {
             .map((project) => geeListButton(() async {
                   await GeePopup(context,
                           content: GeeProjectEditor(
-                              width: 700,
+                              width: 900,
                               heigth: 700,
                               startStore: _startStore,
                               projectRes: project))

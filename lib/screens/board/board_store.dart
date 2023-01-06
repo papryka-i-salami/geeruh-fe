@@ -99,10 +99,15 @@ abstract class _BoardStore with Store {
   }
 
   Future _getStatuses(BuildContext context) async {
+    statuses.clear();
     final response = await apiRequest(_api.getStatuses(), context);
     if (response.isSuccessful) {
-      statuses = ObservableList.of(response.body!);
       statuses.sort(((a, b) => a.orderNumber.compareTo(b.orderNumber)));
+      for (var status in ObservableList.of(response.body!)) {
+        if (status.code.startsWith(projectCode)) {
+          statuses.add(status);
+        }
+      }
     }
   }
 
