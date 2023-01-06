@@ -127,9 +127,9 @@ class _GeeProjectEditorState extends StateWithLifecycle<GeeProjectEditor> {
                               isNew ? "" : widget.projectRes?.description,
                           decoration: const InputDecoration(
                             border: OutlineInputBorder(),
-                            labelText: "Project decribtion",
+                            labelText: "Project description",
                             alignLabelWithHint: true,
-                            hintText: "Enter project describtion",
+                            hintText: "Enter project description",
                           ),
                         ),
                       ),

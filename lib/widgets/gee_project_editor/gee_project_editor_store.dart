@@ -69,7 +69,7 @@ abstract class _GeeProjectEditorStore with Store {
     statuses.clear();
     final response = await apiRequest(_api.getStatuses(), context);
     if (response.isSuccessful) {
-      orderNumber = response.body!.length;
+      orderNumber = response.body!.length + 1;
       if (code != null) {
         for (var status in ObservableList.of(response.body!)) {
           if (status.code.startsWith(code!)) {
