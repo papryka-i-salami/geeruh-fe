@@ -22,6 +22,9 @@ abstract class _GeeTaskEditorStore with Store {
     summary = issue.summary;
     description = issue.description;
     boardStoreToGet = boardStore;
+    if (issue.issueId.isNotEmpty) {
+      await getIssueHistory(context, issue.issueId);
+    }
   }
 
   @observable
@@ -34,6 +37,8 @@ abstract class _GeeTaskEditorStore with Store {
   String? type;
 
   BoardStore? boardStoreToGet;
+
+  ObservableList<IssueHistoryRes>? issueHistory;
 
   @observable
   String selectedParentIssue = "";
@@ -49,6 +54,22 @@ abstract class _GeeTaskEditorStore with Store {
   @action
   selectChildIssue(String newChildIssue) {
     selectedChildIssue = newChildIssue;
+  }
+
+  @observable
+  ObservableFuture futureGetIssueHistory = ObservableFuture.value(null);
+
+  @action
+  Future getIssueHistory(BuildContext context, String issueId) {
+    return futureGetIssueHistory =
+        ObservableFuture(_getIssueHistory(context, issueId));
+  }
+
+  Future _getIssueHistory(BuildContext context, String issueId) async {
+    final response = await apiRequest(_api.getIssueHistory(issueId), context);
+    if (response.isSuccessful) {
+      issueHistory = ObservableList.of(response.body!);
+    }
   }
 
   @observable
