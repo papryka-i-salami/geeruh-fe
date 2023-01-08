@@ -56,8 +56,7 @@ class _GeeNavBarState extends State<GeeNavBar> {
                 );
                 apiRequest(_api.logout(), context);
               },
-              icon: geeAvatar(UserInfo.userId!,
-                  UserInfo.userName == null ? "" : UserInfo.userName!, 30)),
+              icon: geeAvatar(UserInfo.userId, UserInfo.userName, 30)),
         ),
       ],
     );

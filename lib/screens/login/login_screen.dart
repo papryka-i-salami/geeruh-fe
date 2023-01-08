@@ -37,7 +37,10 @@ class _LoginScreenState extends StateWithLifecycle<LoginScreen> {
               borderRadius: BorderRadius.circular(200),
             ),
             child: Center(
-              child: Image.asset('images/Logo.png'),
+              child: Image.asset(
+                'images/Logo.png',
+                key: const ValueKey("GeeruhLogo"),
+              ),
             ),
           ),
           const SizedBox(height: 30),
@@ -58,6 +61,7 @@ class _LoginScreenState extends StateWithLifecycle<LoginScreen> {
                       border: OutlineInputBorder(),
                       labelText: 'Login',
                       hintText: 'Enter login'),
+                  key: const ValueKey("LoginLoginTextField"),
                 ),
               ),
             ],
@@ -79,6 +83,7 @@ class _LoginScreenState extends StateWithLifecycle<LoginScreen> {
                     hintText: "Enter password",
                   ),
                   obscureText: true,
+                  key: const ValueKey("LoginPasswordTextField"),
                 ),
               ),
             ],

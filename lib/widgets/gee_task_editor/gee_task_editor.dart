@@ -192,7 +192,6 @@ class _GeeTaskEditorState extends StateWithLifecycle<GeeTaskEditor> {
   }
 
   Widget listViewForComments(IssueRes currentIssue) {
-    int maxCommentLines = 1000;
     IssueRes currentIssue = widget.item.issue.issueId == ""
         ? widget.item.issue
         : widget.boardStore.getIssueById(widget.item.issue.issueId);
@@ -215,25 +214,21 @@ class _GeeTaskEditorState extends StateWithLifecycle<GeeTaskEditor> {
                 .getUserNameAndSurname(issueComment.creatorUserId);
             return Row(
               children: [
-                Expanded(
-                  child: RichText(
-                    maxLines: maxCommentLines,
-                    overflow: TextOverflow.ellipsis,
-                    text: TextSpan(
-                      style: GeeTextStyles.paragraph2
-                          .copyWith(color: GeeColors.secondary1),
-                      children: <TextSpan>[
-                        const TextSpan(text: "\u2022 "),
-                        TextSpan(
-                          text: "$personName: ",
-                          style: GeeTextStyles.paragraph2.copyWith(
-                              color: GeeColors.secondary1,
-                              fontWeight: FontWeight.bold),
-                        ),
-                        // ignore: unnecessary_string_interpolations
-                        TextSpan(text: "${issueComment.content}"),
-                      ],
-                    ),
+                RichText(
+                  text: TextSpan(
+                    style: GeeTextStyles.paragraph2
+                        .copyWith(color: GeeColors.secondary1),
+                    children: <TextSpan>[
+                      const TextSpan(text: "\u2022 "),
+                      TextSpan(
+                        text: "$personName: ",
+                        style: GeeTextStyles.paragraph2.copyWith(
+                            color: GeeColors.secondary1,
+                            fontWeight: FontWeight.bold),
+                      ),
+                      // ignore: unnecessary_string_interpolations
+                      TextSpan(text: "${issueComment.content}"),
+                    ],
                   ),
                 ),
                 if (issueComment.creatorUserId ==
@@ -574,7 +569,12 @@ class _GeeTaskEditorState extends StateWithLifecycle<GeeTaskEditor> {
                           .copyWith(color: GeeColors.secondary1),
                     ),
                     IconButton(
-                      icon: Icon(Icons.delete, size: 25, color: GeeColors.red),
+                      icon: Icon(
+                          key: ValueKey(
+                              "${parentIssue}_deleteParent"),
+                          Icons.delete,
+                          size: 25,
+                          color: GeeColors.red),
                       onPressed: () {
                         _taskEditorStore.removeIssueRelation(
                             context, parentIssue, currentIssue.issueId);
@@ -628,6 +628,7 @@ class _GeeTaskEditorState extends StateWithLifecycle<GeeTaskEditor> {
             mainAxisSize: MainAxisSize.min,
             children: [
               GeeTextDropdown(
+                key: const ValueKey("parentTaskDropdown"),
                 items: widget.boardStore
                     .getIssuesWithoutSelectedOnes(currentIssue),
                 initialValue: "Empty",
