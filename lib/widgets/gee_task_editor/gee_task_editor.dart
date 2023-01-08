@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:geeruh/api/api_classes.dart';
@@ -52,10 +53,13 @@ class _GeeTaskEditorState extends StateWithLifecycle<GeeTaskEditor> {
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Row(
             children: [
-              Text(
-                "${currentIssue.type}: ",
-                style: GeeTextStyles.heading1.copyWith(color: GeeColors.gray2),
-              ),
+              currentIssue.issueId.isNotEmpty
+                  ? Text(
+                      "${currentIssue.issueId}: ",
+                      style: GeeTextStyles.heading1
+                          .copyWith(color: GeeColors.gray2),
+                    )
+                  : const SizedBox(),
               Expanded(
                 child: TextFormField(
                   onChanged: (newString) {
@@ -93,12 +97,11 @@ class _GeeTaskEditorState extends StateWithLifecycle<GeeTaskEditor> {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          if (currentIssue.issueId != "")
-                            Text(
-                              currentIssue.issueId,
-                              style: GeeTextStyles.heading4
-                                  .copyWith(color: GeeColors.secondary1),
-                            ),
+                          Text(
+                            currentIssue.type,
+                            style: GeeTextStyles.heading4
+                                .copyWith(color: GeeColors.secondary1),
+                          ),
                         ],
                       ),
                     ],
@@ -302,20 +305,137 @@ class _GeeTaskEditorState extends StateWithLifecycle<GeeTaskEditor> {
         color: GeeColors.white,
       ),
       width: width,
-      child: Column(children: [
-        Text(
-          "Activity:",
-          style: GeeTextStyles.heading2.copyWith(color: GeeColors.secondary1),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Center(
+          child: Text(
+            "Activity:",
+            style: GeeTextStyles.heading2.copyWith(color: GeeColors.secondary1),
+          ),
         ),
         const SizedBox(height: 10),
-        const Text(
-          "",
-          style: GeeTextStyles.paragraph3,
-          textAlign: TextAlign.justify,
-          overflow: TextOverflow.ellipsis,
-        )
+        Observer(
+          builder: (_) => GeeFutureChild(
+            status: _taskEditorStore.futureGetIssueHistory.status,
+            loaded: () {
+              return
+                  _taskEditorStore.issueHistory == null
+                      ? const Text("")
+                      : _editHistoryListView(_taskEditorStore.issueHistory!);
+            },
+          ),
+        ),
       ]),
     );
+  }
+
+  Widget _editHistoryListView(List<IssueHistoryRes> entries) {
+    List<RichText> historyRichTextEntries = [];
+
+    entries.asMap().forEach((idx, entry) {
+      if (entry.type == "INSERT") {
+        historyRichTextEntries.add(_activityEntry(
+            entry, "Created issue ", "\"${entry.historicIssue.summary}\" "));
+      } else if (entry.type == "UPDATE") {
+        if (entry.historicIssue.assigneeUserId !=
+            entries[idx - 1].historicIssue.assigneeUserId) {
+          if (entry.historicIssue.assigneeUserId == null) {
+            var user = _taskEditorStore.boardStoreToGet!.users.firstWhereOrNull(
+                (user) =>
+                    user.userId ==
+                    entries[idx - 1].historicIssue.assigneeUserId);
+            historyRichTextEntries.add(_activityEntry(
+                entry,
+                "Removed assignee: ",
+                user != null
+                    ? "${user.firstName} ${user.surname}"
+                    : "Unknown"));
+          } else {
+            var user = _taskEditorStore.boardStoreToGet!.users.firstWhereOrNull(
+                (user) => user.userId == entry.historicIssue.assigneeUserId);
+            historyRichTextEntries.add(
+              _activityEntry(
+                  entry,
+                  "Changed assignee to: ",
+                  user != null
+                      ? "${user.firstName} ${user.surname}"
+                      : "Unknown"),
+            );
+          }
+        }
+        if (entry.historicIssue.description !=
+            entries[idx - 1].historicIssue.description) {
+          if (entry.historicIssue.description == null ||
+              entry.historicIssue.description!.isEmpty) {
+            historyRichTextEntries.add(_activityEntry(
+                entry,
+                "Removed description: ",
+                entries[idx - 1].historicIssue.description!));
+          } else {
+            historyRichTextEntries.add(_activityEntry(entry,
+                "Updated description to: ", entry.historicIssue.description!));
+          }
+        }
+        if (!const ListEquality().equals(entry.historicIssue.relatedIssues,
+            entries[idx - 1].historicIssue.relatedIssues)) {
+          historyRichTextEntries.add(_activityEntry(
+              entry,
+              "Changed parent issues to: ",
+              entry.historicIssue.relatedIssues.toString()));
+        }
+        if (!const ListEquality().equals(
+            entry.historicIssue.relatedIssuesChildren,
+            entries[idx - 1].historicIssue.relatedIssuesChildren)) {
+          historyRichTextEntries.add(_activityEntry(
+              entry,
+              "Changed child issues to: ",
+              entry.historicIssue.relatedIssuesChildren.toString()));
+        }
+        if (entry.historicIssue.statusCode !=
+            entries[idx - 1].historicIssue.statusCode) {
+          String newStatus = _taskEditorStore.boardStoreToGet!.statuses
+              .firstWhere((status) =>
+                  status.code == entries[idx - 1].historicIssue.statusCode)
+              .name;
+          historyRichTextEntries
+              .add(_activityEntry(entry, "Updated status to: ", newStatus));
+        }
+        if (entry.historicIssue.summary !=
+            entries[idx - 1].historicIssue.summary) {
+          historyRichTextEntries.add(_activityEntry(
+              entry, "Updated summary to: ", entry.historicIssue.summary));
+        }
+      }
+    });
+
+    return Expanded(
+      child: SingleChildScrollView(
+        child: ListView(
+            shrinkWrap: true,
+            children: historyRichTextEntries.reversed.toList()),
+      ),
+    );
+  }
+
+  RichText _activityEntry(
+      IssueHistoryRes entry, String description, String difference) {
+    return RichText(
+        text: TextSpan(children: [
+      TextSpan(
+          text: "[${_displayEditTime(DateTime.parse(entry.timestamp))}]\t",
+          style: GeeTextStyles.heading6
+              .copyWith(color: GeeColors.black, fontSize: 16)),
+      TextSpan(
+          text: description,
+          style: GeeTextStyles.paragraph3.copyWith(color: GeeColors.black)),
+      TextSpan(
+          text: difference,
+          style: GeeTextStyles.heading6
+              .copyWith(color: GeeColors.primary1, fontSize: 14))
+    ]));
+  }
+
+  String _displayEditTime(DateTime time) {
+    return "${time.year}/${time.month}/${time.day} ${time.hour}:${time.minute}:${time.second}";
   }
 
   Widget _taskContributorsAndRelatedIssues(

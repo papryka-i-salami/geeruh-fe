@@ -257,3 +257,49 @@ class PostCommentReq {
 
   Map<String, dynamic> toJson() => _$PostCommentReqToJson(this);
 }
+
+@JsonSerializable()
+class IssueHistoryRes {
+  HistoricIssueRes historicIssue;
+  String timestamp;
+  String type;
+
+  IssueHistoryRes({
+    required this.historicIssue,
+    required this.timestamp,
+    required this.type,
+  });
+
+  factory IssueHistoryRes.fromJson(Map<String, dynamic> json) =>
+      _$IssueHistoryResFromJson(json);
+
+  Map<String, dynamic> toJson() => _$IssueHistoryResToJson(this);
+}
+
+@JsonSerializable()
+class HistoricIssueRes {
+  String issueId;
+  String statusCode;
+  String type;
+  String summary;
+  String? description;
+  String? assigneeUserId;
+  List<String> relatedIssues;
+  List<String> relatedIssuesChildren;
+
+  HistoricIssueRes({
+    required this.issueId,
+    required this.statusCode,
+    required this.type,
+    required this.summary,
+    required this.description,
+    required this.assigneeUserId,
+    required this.relatedIssues,
+    required this.relatedIssuesChildren,
+  });
+
+  factory HistoricIssueRes.fromJson(Map<String, dynamic> json) =>
+      _$HistoricIssueResFromJson(json);
+
+  Map<String, dynamic> toJson() => _$HistoricIssueResToJson(this);
+}
