@@ -317,10 +317,9 @@ class _GeeTaskEditorState extends StateWithLifecycle<GeeTaskEditor> {
           builder: (_) => GeeFutureChild(
             status: _taskEditorStore.futureGetIssueHistory.status,
             loaded: () {
-              return
-                  _taskEditorStore.issueHistory == null
-                      ? const Text("")
-                      : _editHistoryListView(_taskEditorStore.issueHistory!);
+              return _taskEditorStore.issueHistory == null
+                  ? const Text("")
+                  : _editHistoryListView(_taskEditorStore.issueHistory!);
             },
           ),
         ),
@@ -421,7 +420,7 @@ class _GeeTaskEditorState extends StateWithLifecycle<GeeTaskEditor> {
     return RichText(
         text: TextSpan(children: [
       TextSpan(
-          text: "[${_displayEditTime(DateTime.parse(entry.timestamp))}]\t",
+          text: "[${_displayEditTime(DateTime.parse(entry.timestamp))}] ",
           style: GeeTextStyles.heading6
               .copyWith(color: GeeColors.black, fontSize: 16)),
       TextSpan(
@@ -570,8 +569,7 @@ class _GeeTaskEditorState extends StateWithLifecycle<GeeTaskEditor> {
                     ),
                     IconButton(
                       icon: Icon(
-                          key: ValueKey(
-                              "${parentIssue}_deleteParent"),
+                          key: ValueKey("${parentIssue}_deleteParent"),
                           Icons.delete,
                           size: 25,
                           color: GeeColors.red),

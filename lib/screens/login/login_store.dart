@@ -50,15 +50,16 @@ abstract class _LoginStore with Store {
         password = "";
 
         _cookieStore.setCookieValue(sessionId);
-      // ignore: use_build_context_synchronously
-      final sessionResponse = await apiRequest(_api.getSession(), context);
-      if (sessionResponse.isSuccessful) {
-        UserRes user = sessionResponse.body!;
-        UserInfo.userName = user.firstName;
-        UserInfo.userId = int.parse(
-            "1${user.userId.replaceAll(RegExp('[^0-9]'), '')}".substring(6));
+        // ignore: use_build_context_synchronously
+        final sessionResponse = await apiRequest(_api.getSession(), context);
+        if (sessionResponse.isSuccessful) {
+          UserRes user = sessionResponse.body!;
+          UserInfo.userName = user.firstName;
+          UserInfo.userId = int.parse(
+              "1${user.userId.replaceAll(RegExp('[^0-9]'), '')}".substring(6));
+        }
       }
-      }
+      Future.delayed(const Duration(milliseconds: 500));
       Navigator.pushNamed(
           navigatorKey.currentContext!, ConstantScreens.startScreen);
     }
