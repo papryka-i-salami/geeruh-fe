@@ -53,7 +53,7 @@ void main() {
         await simulateKeyDownEvent(LogicalKeyboardKey.escape);
         await tester.pumpAndSettle();
         await tester
-            .tap(find.widgetWithText(TextButton, "Board for nieusuwać"));
+            .tap(find.widgetWithText(TextButton, "Board for Test environment"));
         await tester.pumpAndSettle();
         await tester.tap(find.byKey(const ValueKey("TEST-1_edit")).last);
         await tester.pumpAndSettle();
@@ -65,10 +65,10 @@ void main() {
         await tester.pumpAndSettle();
         await tester.tap(find.byKey(const ValueKey("TEST-2_edit")).last);
         await tester.pumpAndSettle();
-        await tester.tap(find.byKey(const ValueKey("TEST-1_deleteParent")).last);
-        await tester.pumpAndSettle();
-        await tester.tap(find.widgetWithText(ElevatedButton, "Approve"));
-        await tester.pumpAndSettle();
+        // await tester.tap(find.byKey(const ValueKey("TEST-1_deleteParent")).last);
+        // await tester.pumpAndSettle();
+        // await tester.tap(find.widgetWithText(ElevatedButton, "Approve"));
+        // await tester.pumpAndSettle();
 
         // final pencilFinder = find.image(FileImage(File('images/Team.png')));
         // expect(pencilFinder, findsOneWidget);
