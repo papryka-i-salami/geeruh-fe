@@ -55,19 +55,20 @@ void main() {
         await tester
             .tap(find.widgetWithText(TextButton, "Board for nieusuwać"));
         await tester.pumpAndSettle();
-        await tester.tap(find.byKey(const ValueKey("NIE-6")).last);
+        await tester.tap(find.byKey(const ValueKey("TEST-1_edit")).last);
         await tester.pumpAndSettle();
         await tester.tap(find.byKey(const ValueKey("parentTaskDropdown")));
         await tester.pumpAndSettle();
         await tester.tap(find.text("NIE-7").last);
         await tester.pumpAndSettle();
-        await tester.tap(find.byKey(const ValueKey("NIE-7")).last);
+        await tester.tap(find.widgetWithText(ElevatedButton, "Approve"));
         await tester.pumpAndSettle();
-        await tester.tap(find.byKey(const ValueKey("parentTaskDropdown")));
+        await tester.tap(find.byKey(const ValueKey("TEST-2_edit")).last);
+        await tester.pumpAndSettle();
+        await tester.tap(find.byKey(const ValueKey("TEST-1_deleteParent")).last);
         await tester.pumpAndSettle();
         await tester.tap(find.widgetWithText(ElevatedButton, "Approve"));
         await tester.pumpAndSettle();
-
 
         // final pencilFinder = find.image(FileImage(File('images/Team.png')));
         // expect(pencilFinder, findsOneWidget);

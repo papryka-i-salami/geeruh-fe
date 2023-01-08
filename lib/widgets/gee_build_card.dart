@@ -59,13 +59,13 @@ class _GeeBuildCardState extends State<_GeeBuildCard> {
                     await GeePopup(
                       context,
                       content: GeeTaskEditor(
-                        key: widget.key,
                         item: widget.item,
                         boardStore: widget.boardStore,
                       ),
                     ).show();
                   },
                   Image.asset(
+                    key: ValueKey("${widget.item.issue.issueId}_edit"),
                     "images/EditPencil.png",
                     width: 24,
                     height: 24,
@@ -80,6 +80,7 @@ class _GeeBuildCardState extends State<_GeeBuildCard> {
                   },
                   Icon(
                     Icons.delete,
+                    key: ValueKey("${widget.item.issue.issueId}_delete"),
                     size: 26,
                     color: GeeColors.red,
                   ),
