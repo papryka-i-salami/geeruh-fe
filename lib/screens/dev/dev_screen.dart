@@ -36,8 +36,8 @@ class _DevScreenState extends StateWithLifecycle<DevScreen> {
           ),
           Row(
             children: [
-              IconButton(onPressed: () {}, icon: geeAvatar(4, "Maks", 30)),
-              geeAvatar(1, "Maks", 40),
+              IconButton(onPressed: () {}, icon: geeAvatar(1, "Bolek", 30)),
+              geeAvatar(2, "Lolek", 40),
             ],
           ),
           Row(

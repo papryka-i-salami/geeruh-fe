@@ -61,6 +61,11 @@ abstract class ApiRequests extends ChopperService {
     @Path("issueId") String issueId,
   );
 
+  @Get(path: "/issues/{issueId}/history")
+  Future<Response<List<IssueHistoryRes>>> getIssueHistory(
+    @Path("issueId") String issueId,
+  );
+
 // -------------------------------------------
 
   @Get(path: "/projects")

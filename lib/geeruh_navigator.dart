@@ -36,6 +36,8 @@ Route geeruhPageRoute(
       );
 
     default:
-      throw Exception("Incorrect screen path");
+      return MaterialPageRoute(
+        builder: (_) => const LoginScreen(),
+      );
   }
 }

@@ -4,6 +4,7 @@ import 'package:geeruh/api/api_build.dart';
 import 'package:geeruh/api/api_classes.dart';
 import 'package:geeruh/api/api_requests.dart';
 import 'package:geeruh/cookies/cookie_store.dart';
+import 'package:geeruh/gee_user_info.dart';
 import 'package:geeruh/global_constants.dart';
 import 'package:geeruh/main.dart';
 import 'package:mobx/mobx.dart';
@@ -49,6 +50,14 @@ abstract class _LoginStore with Store {
         password = "";
 
         _cookieStore.setCookieValue(sessionId);
+      // ignore: use_build_context_synchronously
+      final sessionResponse = await apiRequest(_api.getSession(), context);
+      if (sessionResponse.isSuccessful) {
+        UserRes user = sessionResponse.body!;
+        UserInfo.userName = user.firstName;
+        UserInfo.userId = int.parse(
+            "1${user.userId.replaceAll(RegExp('[^0-9]'), '')}".substring(6));
+      }
       }
       Navigator.pushNamed(
           navigatorKey.currentContext!, ConstantScreens.startScreen);

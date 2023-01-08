@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:geeruh/gee_user_info.dart';
 import 'package:geeruh/theme.dart';
 
 Widget geeAvatar(int id, String name, double size) {
@@ -7,7 +8,9 @@ Widget geeAvatar(int id, String name, double size) {
     height: size,
     decoration: BoxDecoration(
       border: Border.all(color: GeeColors.gray2, width: 1),
-      color: HSVColor.fromAHSV(0.9, id * 19 % 360, 1, 1).toColor(),
+      color: UserInfo.userId != null
+          ? HSVColor.fromAHSV(0.9, id * 19 % 360, 1, 1).toColor()
+          : GeeColors.gray10,
       borderRadius: BorderRadius.circular(size),
     ),
     child: Center(

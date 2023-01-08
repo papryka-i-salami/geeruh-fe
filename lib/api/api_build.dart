@@ -21,6 +21,8 @@ JsonToTypeConverter _converter = JsonToTypeConverter(
     StatusRes: (json) => StatusRes.fromJson(json),
     UserRes: (json) => UserRes.fromJson(json),
     CommentRes: (json) => CommentRes.fromJson(json),
+    IssueHistoryRes: (json) => IssueHistoryRes.fromJson(json),
+    HistoricIssueRes: (json) => HistoricIssueRes.fromJson(json),
   },
 );
 
